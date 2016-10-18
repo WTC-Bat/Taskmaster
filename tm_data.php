@@ -14,99 +14,145 @@ function createConfig($path)
 	$xDoc->save($path);
 }
 
-//?
-function loadPrograms($config)
+function loadConfig($config)
 {
 	$progs = array();
-	$args = array();
-	$xDoc;
-	$xProgs;
-
 	$xDoc = new DOMDocument();
 	$xDoc->load($config);
 	$xProgs = $xDoc->getElementsByTagName("Program");
 	foreach ($xProgs as $xProg)
 	{
-		foreach ($xProg->childNodes as $child)
-		{
-			switch ($child->nodeName)
-			{
-				case "":
-				case "":
-				case "":
-				case "":
-				case "":
-				case "":
-				case "":
-				case "":
-				case "":
-				case "":
-			}
-		}
+		if (count($progs) == 0)
+			$progs[0] = programFromElement($xProg);
+		else
+			array_push($progs, programFromElement($xProg));
 	}
+	return ($progs);
 }
 
 function programExists(Program $prog, $config)
 {
 	$xDoc = new DOMDocument();
+	$xProgs;
+
 	$xDoc->load($config);
 	$xProgs = $xDoc->getElementsByTagName("Program");
-
 	foreach ($xProgs as $xProg)
 	{
-		foreach ($xProg->childNodes as $child)
-		{
-			if ($child->nodeName === "command")
-			{
-				if ($child->nodeValue == $prog->command)
-				{
-					return (TRUE);
-				}
-			}
-		}
+		if (programFromElement($xProg) == $prog)
+			return (TRUE);
 	}
 	return (FALSE);
 }
 
-//?
-function removeProgram(Program $prog, $config)
+function programFromElement(DOMElement $xProgram)
 {
-	$xDoc = new DOMDocument();
-	$xRoot;
-	$xProgs;
-	$xCmd;
-	$equ = TRUE;
+	$prog = new Program(array());
 
-	$xDoc->preserveWhiteSpace = FALSE;
-	$xDoc->formatOutput = TRUE;
-	$xDoc->load($config);
-	$xRoot = $xDoc->getElementsByTagName("Programs");
-	$xProgs = $xRoot[0]->getElementsByTagName("Program");
-	//foreach ($xProgs as $xp)
-	foreach ($xProgs as $xProg)
+	if ($xProgram->nodeName == "Program")
 	{
-		foreach ($xProg->childNodes as $child)
+		foreach ($xProgram->childNodes as $child)
 		{
+			$nval = $child->nodeValue;
 			switch ($child->nodeName)
 			{
 				case "command":
-					if ($child->nodeValue == $prog->command)
-						$equ = TRUE;
+					$prog->command = $nval;
+					break;
+				case "procnum":
+					$prog->procnum = (int)$nval;
+					break;
+				case "autolaunch":
+					if ($nval === "TRUE")
+						$prog->autolaunch = TRUE;
+					else
+						$prog->autolaunch = FALSE;
+					break;
+				case "starttime":
+					$prog->starttime = (int)$nval;
+					break;
+				case "restart":
+					$prog->restart = $nval;
+					break;
+				case "retries":
+					$prog->retries = (int)$nval;
+					break;
+				case "stopsig":
+					$prog->stopsig = $nval;
+					break;
+				case "stoptime":
+					$prog->stoptime = (int)$nval;
+					break;
+				case "exitcodes":
+					if ($child->hasChildNodes())
+					{
+						$xCodes = $child->getElementsByTagName("code");
+						$codes = array();
+						foreach ($xCodes as $xCode)
+						{
+							if (count($codes) == 0)
+								$codes[0] = $xCode->nodeValue;
+							else
+								array_push($codes, $xCode->nodeValue);
+						}
+						$prog->exitcodes = $codes;
+					}
+					break;
+				case "stdout":
+					$prog->stdout = $nval;
+					break;
+				case "stderr":
+					$prog->stderr = $nval;
+					break;
+				case "redir":
+					$prog->redir = $nval;
+					break;
+				case "envvars":
+					if ($child->hasChildNodes())
+					{
+						$xEnvs = $child->getElementsByTagName("envvar");
+						$vars = array();
+						foreach ($xEnvs as $xEnv)
+						{
+							$var = $xEnv->getElementsByTagName("var");
+							$val = $xEnv->getElementsByTagName("val");
+							$vars[$var[0]->nodeValue] = $val[0]->nodeValue;
+						}
+						$prog->envvars = $vars;
+					}
+					break;
+				case "workingdir":
+					$prog->workingdir = $nval;
+					break;
+				case "umask":
+					$prog->umask = $nval;
 					break;
 			}
 		}
-
-
-
-		// $xCmd = $xp->getElementsByTagName("command");
-		// print($xCmd[0]->nodeValue . PHP_EOL);
-		// if ($xCmd[0]->nodeValue == $prog->command)
-		// {
-		// 	$xRoot[0]->removeChild($xp);
-		// 	break;
-		// }
 	}
-	$xDoc->save($config);
+	return ($prog);
+}
+
+function removeProgram(Program $prog, $config)
+{
+	$progs;
+	$cnt = 0;
+
+	$progs = loadConfig($config);
+	foreach ($progs as $p)
+	{
+		if ($p == $prog)
+		{
+			unset($progs[$cnt]);
+		}
+		$cnt++;
+	}
+	$progs = array_values($progs);
+	file_put_contents($config, "");
+	foreach ($progs as $p)
+	{
+		$p->save($config, TRUE);
+	}
 }
 
 function saveNewProgram(Program $prog, DOMDocument $xDoc, DOMElement $xProg)
@@ -167,18 +213,18 @@ function saveProgram(Program $prog, $config, $overwrite)
 	$xDoc->formatOutput = TRUE;
 	$xDoc->load($config);
 	$xRoot = $xDoc->getElementsByTagName("Programs");
-	$xProg = $xDoc->createElement("Program");
-	$xRoot[0]->appendChild($xProg);
 	if (programExists($prog, $config) === TRUE)
 	{
-		if ($overwrite === TRUE)
-		{
-			removeProgram($prog, $config);
-			saveNewProgram($prog, $xDoc, $xProg);
-		}
+		// if ($overwrite === TRUE)
+		// {
+		// 	removeProgram($prog, $config);
+		// 	saveNewProgram($prog, $xDoc, $xProg);
+		// }
 	}
 	else
 	{
+		$xProg = $xDoc->createElement("Program");
+		$xRoot[0]->appendChild($xProg);
 		saveNewProgram($prog, $xDoc, $xProg);
 	}
 	$xDoc->save($config);
