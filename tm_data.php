@@ -16,6 +16,11 @@ function createConfig($path)
 
 function loadConfig($config)
 {
+	if ((file_exists($config) === FALSE) ||
+		(trim(file_get_contents($config)) == FALSE))
+	{
+		return (array());
+	}
 	$progs = array();
 	$xDoc = new DOMDocument();
 	$xDoc->load($config);

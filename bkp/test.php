@@ -40,7 +40,7 @@ $prog2 = new Program(array());
 // saveProgram($prog1, "./config.xml", FALSE);
 // saveProgram($prog2, "./config.xml", FALSE);
 
-$prog1->remove("./config.xml");
+// $prog1->remove("./config.xml");
 
 // print($prog1 . PHP_EOL);
 // print($prog2 . PHP_EOL);
