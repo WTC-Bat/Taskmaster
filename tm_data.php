@@ -5,7 +5,7 @@ function createConfig($path)
 	$xRoot;
 
 	if (!file_exists($path))
-		mkdir($path);
+		mkdir($path, 0777, TRUE);
 	$xDoc = new DOMDocument("1.0", "UTF-8");
 	$xDoc->xmlStandalone = TRUE;
 	$xDoc->formatOutput = TRUE;
@@ -135,31 +135,38 @@ function programFromElement(DOMElement $xProgram)
 
 function removeProgram(Program $prog, $config)
 {
-	$progs;
-	$cnt = 0;
+	$xDoc;
+	$xProgs;
 
-	$progs = loadConfig($config);
-	foreach ($progs as $p)
+	if (file_exists($config))
 	{
-		if ($p == $prog)
+		$xDoc = new DOMDocument();
+		$xDoc->preserveWhiteSpace = FALSE;
+		$xDoc->formatOutput = TRUE;
+		$xDoc->load($config);
+		$xProgs = $xDoc->getElementsByTagName("Program");
+		foreach ($xProgs as $xProg)
 		{
-			unset($progs[$cnt]);
+			$p = programFromElement($xProg);
+			if ($p == $prog)
+			{
+				$xProg->parentNode->removeChild($xProg);
+				$xDoc->save($config);
+				break;
+			}
 		}
-		$cnt++;
-	}
-	$progs = array_values($progs);
-	file_put_contents($config, "");
-	foreach ($progs as $p)
-	{
-		$p->save($config, TRUE);
 	}
 }
 
-function saveNewProgram(Program $prog, DOMDocument $xDoc, DOMElement $xProg)
+function saveNewProgram(Program $prog, DOMDocument $xDoc, $config)
 {
+	$xRoot;
+	$xProg;
 	$xEl;
 	$xCh;
 
+	$xRoot = $xDoc->getElementsByTagName("Programs");
+	$xProg = $xDoc->createElement("Program");
 	foreach ($prog as $key => $val)
 	{
 		if (is_array($val))
@@ -198,6 +205,8 @@ function saveNewProgram(Program $prog, DOMDocument $xDoc, DOMElement $xProg)
 			$xEl = $xDoc->createElement($key, $vstr);
 		}
 		$xProg->appendChild($xEl);
+		$xRoot[0]->appendChild($xProg);
+		$xDoc->save($config);
 	}
 }
 
@@ -207,12 +216,14 @@ function saveProgram(Program $prog, $config, $overwrite)
 	$xRoot;
 	$xProg;
 
-	if ((!file_exists($config)) || (filesize($config) == 0))
+	if ((file_exists($config) === FALSE) ||
+		(trim(file_get_contents($config)) == FALSE))
+	{
 		createConfig($config);
+	}
 	$xDoc->preserveWhiteSpace = FALSE;
 	$xDoc->formatOutput = TRUE;
 	$xDoc->load($config);
-	$xRoot = $xDoc->getElementsByTagName("Programs");
 	if (programExists($prog, $config) === TRUE)
 	{
 		// if ($overwrite === TRUE)
@@ -223,10 +234,7 @@ function saveProgram(Program $prog, $config, $overwrite)
 	}
 	else
 	{
-		$xProg = $xDoc->createElement("Program");
-		$xRoot[0]->appendChild($xProg);
-		saveNewProgram($prog, $xDoc, $xProg);
+		saveNewProgram($prog, $xDoc, $config);
 	}
-	$xDoc->save($config);
 }
 ?>
