@@ -18,7 +18,7 @@ class Program():
 	workingdir = ""
 	umask = ""
 
-	def __init__(self, args):
+	def __init__(self, args=None):
 		""""""
 		if type(args) is dict:
 			for key, val in args.iteritems():

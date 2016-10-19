@@ -8,7 +8,7 @@ class Taskmaster(cmd.Cmd):
 	def __init__(self):
 		""""""
 		cmd.Cmd.__init__(self)
-		self.prompt = "Taskmaster> "
+		self.prompt = "\033[94mTaskmaster>\033[0m "
 
 	def emptyline(self):
 		""""""
@@ -36,7 +36,7 @@ class Taskmaster(cmd.Cmd):
 		'''Custom input handling'''
 		if (line == "cheese"):
 			print "Crackers"
-		else if (line == "init"):
+		elif (line == "init"):
 			print "init";
 
 
