@@ -38,5 +38,8 @@ def main():
 	prog1 = Program(args1)
 	prog2 = Program(args2)
 
+	for k, v in vars(prog1).iteritems():
+		print(k)
+
 if __name__ == "__main__":
 	main();

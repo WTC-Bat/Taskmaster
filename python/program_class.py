@@ -2,21 +2,22 @@ import array
 
 class Program():
 	""""""
-	command = ""
-	procnum = 1
-	autolaunch = True
-	starttime = 5
-	restart = "unexpected"
-	retries = 3
-	stopsig = ""
-	stoptime = 10
-	exitcodes = list()
-	stdout = ""
-	stderr = ""
-	redir = ""
-	envvars = dict()
-	workingdir = ""
-	umask = ""
+	# command = ""
+	# procnum = 1
+	# autolaunch = True
+	# starttime = 5
+	# restart = "unexpected"
+	# retries = 3
+	# stopsig = ""
+	# stoptime = 10
+	# exitcodes = list()
+	# exitcodes = None
+	# stdout = ""
+	# stderr = ""
+	# redir = ""
+	# envvars = dict()
+	# workingdir = ""
+	# umask = ""
 
 	def __init__(self, args=None):
 		""""""
@@ -39,6 +40,7 @@ class Program():
 				elif key == "stoptime":
 					self.stoptime = val
 				elif type(val) is list and key == "exitcodes":
+					self.exitcodes = list()
 					for i in val:
 						self.exitcodes.append(i);
 				elif key == "stdout":
@@ -48,6 +50,7 @@ class Program():
 				elif key == "redir":
 					self.redir = val
 				elif type(val) is dict and key == "envvars":
+					self.envvars = dict();
 					for k, v in val.iteritems():
 						self.envvars[k] = v
 				elif key == "workingdir":

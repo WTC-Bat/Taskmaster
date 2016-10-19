@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from program_class import Program
 import tmdata
+import os
 
 def main():
 	""""""
@@ -39,7 +40,7 @@ def main():
 	prog1 = Program(args1)
 	prog2 = Program(args2)
 
-	tmdata.saveProgram(prog1, "../config.xml", False)
+	tmdata.saveProgram(prog1, "./config.xml", False)
 
 if __name__ == "__main__":
 	main();
