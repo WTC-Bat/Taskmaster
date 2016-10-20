@@ -42,8 +42,6 @@ class Taskmaster(cmd.Cmd):
 		'''Custom input handling'''
 		if (line == "cheese"):
 			print "Crackers"
-		elif (line == "init"):
-			print "init";
 
 
 def main():
