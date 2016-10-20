@@ -12,14 +12,14 @@
 			</envvar>
 		</envvars>
 		<retries>2</retries>
-		<stderr>/C/Downloads/darkradiant-1.8.0-x64.stderr</stderr>
+		<stderr>/Downloads/darkradiant-1.8.0-x64.stderr</stderr>
 		<stdout>/C/Downloads/darkradiant-1.8.0-x64.stdout</stdout>
 		<umask>077</umask>
 		<workingdir>/tmp</workingdir>
 		<redir>/C/Downloads/darkradiant-1.8.0-x64.redir</redir>
 		<autolaunch>True</autolaunch>
 		<stoptime>10</stoptime>
-		<command>/C/Downloads/darkradiant-1.8.0-x64</command>
+		<command>/Downloads/darkradiant-1.8.0-x64.exe</command>
 		<starttime>5</starttime>
 		<stopsig>SSIG</stopsig>
 		<procnum>1</procnum>
@@ -50,7 +50,7 @@
 		<redir>/C/UsbFix/UsbFix.exe.redir</redir>
 		<autolaunch>True</autolaunch>
 		<stoptime>10</stoptime>
-		<command>/C/UsbFix/UsbFix.exe</command>
+		<command>/UsbFix/UsbFix.exe</command>
 		<starttime>5</starttime>
 		<stopsig>SSIG</stopsig>
 		<procnum>1</procnum>

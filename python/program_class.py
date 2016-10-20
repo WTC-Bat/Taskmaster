@@ -1,4 +1,9 @@
-import array
+# import array
+import subprocess
+import shlex
+import os
+import sched
+import time
 
 class Program():
 	""""""
@@ -42,7 +47,7 @@ class Program():
 					self.umask = val
 
 	def __str__(self):
-		""""""		
+		""""""
 		return (("command: {}\nprocnum: {}\nautolaunch: {}\nstarttime: {}\n"
 				"restart: {}\nretries: {}\nstopsig: {}\nstoptime: {}\n"
 				"exitcodes: {}\nstdout: {}\nstderr: {}\nredir: {}\n"
@@ -57,3 +62,18 @@ class Program():
 		""""""
 		return (str(self) == str(obj))
 		# return (self.__dict__ == obj.__dict__)
+
+	def runAndMonitor(self):
+		""""""
+		#args = shlex.split(os.path.realpath(self.command))
+		# pop = subprocess.Popen(args)
+
+		# STILL NEED TO SPLIT PATH FROM ARGS IN 'self.command'
+		# pop = subprocess.Popen(os.path.realpath(os.path.normpath(self.command)))
+		# sch = sched.scheduler(time.time, time.sleep)
+		# sch.enter(1, 1, self.t(pop.poll()), self)
+		# sch.run()
+
+
+	def t(self, poppoll):
+		print poppoll

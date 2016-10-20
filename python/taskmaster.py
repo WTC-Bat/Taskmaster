@@ -2,7 +2,10 @@
 import os
 import cmd
 import platform
+import sched
+import tmdata
 
+#	subprocess
 
 class Taskmaster(cmd.Cmd):
 	""""""
@@ -13,8 +16,7 @@ class Taskmaster(cmd.Cmd):
 			self.prompt = "\033[94mTaskmaster>\033[0m "
 		else:
 			self.prompt = "Taskmaster> "
-		# self.prompt = "\033[94mTaskmaster>\033[0m "
-		# self.prompt = "Taskmaster> "
+		self.programs = list()
 
 	def emptyline(self):
 		""""""
@@ -42,16 +44,37 @@ class Taskmaster(cmd.Cmd):
 		'''Custom input handling'''
 		if (line == "cheese"):
 			print "Crackers"
+		elif line == "load":
+			self.programs = tmdata.loadConfig(os.path.realpath("./config.xml"))
+			print("\n---Programs Loaded---\n")
+		elif line == "sched":
+			if not self.programs:
+				print("Load config first!")
+				return (1)
+			print("\n---Monitoring " + str(len(self.programs))
+					+ " programs---\n")
+			self.testsched(self.programs[0])
+
+
+	def testsched(self, program):
+		""""""
+		#
+		#	initialtests
+		#
+		program.runAndMonitor()
+		#
+		#	initialtests
+		#
+		#sch = sched.scheduler()
 
 
 def main():
 	""""""
 	tm = Taskmaster()
-	os.system("clear")
-	# if str(platform.system()) != "Windows":
-	# 	tm.prompt = "\033[94mTaskmaster>\033[0m "
-	# else:
-	# 	tm.prompt = "Taskmaster> "
+	if str(platform.system()) != "Windows":
+		os.system("clear")
+	else:
+		os.system("cls")
 	tm.cmdloop()
 
 
