@@ -17,6 +17,7 @@ def loadConfig(config):
 
 def saveProgram(program, config, overwrite):
 	""""""
+	path = os.path.join(os.path.dirname(__file__), config)
 	programs = None
 	program = None
 	exitcodes = None
@@ -52,4 +53,4 @@ def saveProgram(program, config, overwrite):
 			member.text = val
 	etree = ET.ElementTree(programs);
 	# pstr = minidom.parseString(ElementTree.tostring(etree, "utf-8"))
-	etree.write(os.path.join(os.path.dirname(__file__), config))
+	etree.write(path)

@@ -2,23 +2,6 @@ import array
 
 class Program():
 	""""""
-	# command = ""
-	# procnum = 1
-	# autolaunch = True
-	# starttime = 5
-	# restart = "unexpected"
-	# retries = 3
-	# stopsig = ""
-	# stoptime = 10
-	# exitcodes = list()
-	# exitcodes = None
-	# stdout = ""
-	# stderr = ""
-	# redir = ""
-	# envvars = dict()
-	# workingdir = ""
-	# umask = ""
-
 	def __init__(self, args=None):
 		""""""
 		if type(args) is dict:
@@ -57,3 +40,20 @@ class Program():
 					self.workingdir = val
 				elif key == "umask":
 					self.umask = val
+
+	def __str__(self):
+		""""""		
+		return (("command: {}\nprocnum: {}\nautolaunch: {}\nstarttime: {}\n"
+				"restart: {}\nretries: {}\nstopsig: {}\nstoptime: {}\n"
+				"exitcodes: {}\nstdout: {}\nstderr: {}\nredir: {}\n"
+				"envvars: {}\nworkingdir: {}\numask: {}\n"))\
+				.format(self.command, self.procnum, self.autolaunch,
+						self.starttime, self.restart, self.retries,
+						self.stopsig, self.stoptime, self.exitcodes,
+						self.stdout, self.stderr, self.redir, self.envvars,
+						self.workingdir, self.umask)
+
+	def __eq__(self, obj):
+		""""""
+		return (str(self) == str(obj))
+		# return (self.__dict__ == obj.__dict__)

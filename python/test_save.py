@@ -41,6 +41,9 @@ def main():
 	prog2 = Program(args2)
 
 	tmdata.saveProgram(prog1, "./config.xml", False)
+	tmdata.saveProgram(prog2, "./config.xml", False)
+	# tmdata.saveProgram(prog1, "./config.json", False)
+	# tmdata.saveProgram(prog2, "./config.json", False)
 
 if __name__ == "__main__":
 	main();
