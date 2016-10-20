@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import os
 import cmd
+import platform
 
 
 class Taskmaster(cmd.Cmd):
@@ -8,7 +9,12 @@ class Taskmaster(cmd.Cmd):
 	def __init__(self):
 		""""""
 		cmd.Cmd.__init__(self)
-		self.prompt = "\033[94mTaskmaster>\033[0m "
+		if str(platform.system()) != "Windows":
+			self.prompt = "\033[94mTaskmaster>\033[0m "
+		else:
+			self.prompt = "Taskmaster> "
+		# self.prompt = "\033[94mTaskmaster>\033[0m "
+		# self.prompt = "Taskmaster> "
 
 	def emptyline(self):
 		""""""
@@ -40,7 +46,16 @@ class Taskmaster(cmd.Cmd):
 			print "init";
 
 
-if __name__ == "__main__":
+def main():
+	""""""
 	tm = Taskmaster()
 	os.system("clear")
+	# if str(platform.system()) != "Windows":
+	# 	tm.prompt = "\033[94mTaskmaster>\033[0m "
+	# else:
+	# 	tm.prompt = "Taskmaster> "
 	tm.cmdloop()
+
+
+if __name__ == "__main__":
+	main()

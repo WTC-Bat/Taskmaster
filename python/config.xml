@@ -12,14 +12,14 @@
 			</envvar>
 		</envvars>
 		<retries>2</retries>
-		<stderr>/usr/bin/whoami.stderr</stderr>
-		<stdout>/usr/bin/whoami.stdout</stdout>
+		<stderr>/C/Downloads/darkradiant-1.8.0-x64.stderr</stderr>
+		<stdout>/C/Downloads/darkradiant-1.8.0-x64.stdout</stdout>
 		<umask>077</umask>
 		<workingdir>/tmp</workingdir>
-		<redir>/usr/bin/whoami.redir</redir>
+		<redir>/C/Downloads/darkradiant-1.8.0-x64.redir</redir>
 		<autolaunch>True</autolaunch>
 		<stoptime>10</stoptime>
-		<command>/usr/bin/whoami</command>
+		<command>/C/Downloads/darkradiant-1.8.0-x64</command>
 		<starttime>5</starttime>
 		<stopsig>SSIG</stopsig>
 		<procnum>1</procnum>
@@ -43,14 +43,14 @@
 			</envvar>
 		</envvars>
 		<retries>2</retries>
-		<stderr>/usr/bin/whois.stderr</stderr>
-		<stdout>/usr/bin/whois.stdout</stdout>
+		<stderr>/C/UsbFix/UsbFix.exe.stderr</stderr>
+		<stdout>/C/UsbFix/UsbFix.exe.stdout</stdout>
 		<umask>077</umask>
 		<workingdir>/tmp</workingdir>
-		<redir>/usr/bin/whois.redir</redir>
+		<redir>/C/UsbFix/UsbFix.exe.redir</redir>
 		<autolaunch>True</autolaunch>
 		<stoptime>10</stoptime>
-		<command>/usr/bin/whois</command>
+		<command>/C/UsbFix/UsbFix.exe</command>
 		<starttime>5</starttime>
 		<stopsig>SSIG</stopsig>
 		<procnum>1</procnum>

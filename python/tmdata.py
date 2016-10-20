@@ -46,7 +46,6 @@ def programExists(program, config):
 		xroot = xdoc.getroot()
 		for xprog in xroot:
 			prog = programFromElement(xprog)
-			# if str(prog) == str(program):
 			if prog == program:
 				return (True)
 	return (False)
@@ -104,8 +103,20 @@ def programFromElement(progel):
 
 
 def removeProgam(program, config):
-	""""""
-	pass
+	"""Removes the specified 'Program' from the xml config file"""
+	path = os.path.join(os.path.dirname(__file__), config)
+	prog = None
+
+	if os.path.exists(path) and os.path.getsize(path) > 0:
+		xdoc = ET.parse(path)
+		xroot = xdoc.getroot()
+		for xprog in xroot:
+			prog = programFromElement(xprog)
+			if prog == program:
+				xroot.remove(xprog)
+				xdoc.write(path, encoding="utf-8", xml_declaration=True)
+				return
+
 
 
 def saveProgram(program, config, overwrite):
@@ -122,7 +133,8 @@ def saveProgram(program, config, overwrite):
 
 	#	if two programs with the same command are not allowed, then we just
 	#	need to check if two objects have the same command. At the moment,
-	#	two objects will only be equal if all members are the same
+	#	two objects will only be equal if all members are the same. Moreover,
+	#	this also renders replacing program entries pointless
 	if programExists(program, config):
 		if overwrite == False:
 			return
