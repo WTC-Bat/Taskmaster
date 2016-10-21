@@ -10,9 +10,12 @@ class Program():
 	""""""
 	def __init__(self, args=None):
 		""""""
+		#self.useShell = False?
 		if type(args) is dict:
 			for key, val in args.iteritems():
-				if key == "command":
+				if key == "progname":
+					self.progname = val
+				elif key == "command":
 					self.command = val
 				elif key == "procnum":
 					self.procnum = val
@@ -36,8 +39,10 @@ class Program():
 					self.stdout = val
 				elif key == "stderr":
 					self.stderr = val
-				elif key == "redir":
-					self.redir = val
+				elif key == "redout":
+					self.redout = val
+				elif key == "rederr":
+					self.rederr = val
 				elif type(val) is dict and key == "envvars":
 					self.envvars = dict();
 					for k, v in val.iteritems():
@@ -49,15 +54,16 @@ class Program():
 
 	def __str__(self):
 		""""""
-		return (("command: {}\nprocnum: {}\nautolaunch: {}\nstarttime: {}\n"
-				"restart: {}\nretries: {}\nstopsig: {}\nstoptime: {}\n"
-				"exitcodes: {}\nstdout: {}\nstderr: {}\nredir: {}\n"
-				"envvars: {}\nworkingdir: {}\numask: {}\n"))\
-				.format(self.command, self.procnum, self.autolaunch,
-						self.starttime, self.restart, self.retries,
-						self.stopsig, self.stoptime, self.exitcodes,
-						self.stdout, self.stderr, self.redir, self.envvars,
-						self.workingdir, self.umask)
+		return (("progname: {}\ncommand: {}\nprocnum: {}\nautolaunch: {}\n"
+				"starttime: {}\nrestart: {}\nretries: {}\nstopsig: {}\n"
+				"stoptime: {}\nexitcodes: {}\nstdout: {}\nstderr: {}\n"
+				"redout: {}\nrederr: {}\nenvvars: {}\nworkingdir: {}\n"
+				"umask: {}\n"))\
+				.format(self.progname, self.command, self.procnum,
+						self.autolaunch, self.starttime, self.restart,
+						self.retries, self.stopsig, self.stoptime,
+						self.exitcodes, self.stdout, self.stderr, self.redout,
+						self.rederr, self.envvars, self.workingdir, self.umask)
 
 	def __eq__(self, obj):
 		""""""

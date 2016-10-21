@@ -58,7 +58,9 @@ def programFromElement(progel):
 	evars = dict()
 
 	for el in progel:
-		if el.tag == "command":
+		if el.tag == "progname":
+			prog.progname = el.text
+		elif el.tag == "command":
 			prog.command = el.text
 		elif el.tag == "procnum":
 			prog.procnum = int(el.text)
@@ -82,8 +84,10 @@ def programFromElement(progel):
 			prog.stdout = el.text
 		elif el.tag == "stderr":
 			prog.stderr = el.text
-		elif el.tag == "redir":
-			prog.redir = el.text
+		elif el.tag == "redout":
+			prog.redout = el.text
+		elif el.tag == "rederr":
+			prog.rederr = el.text
 		elif el.tag == "envvars":
 			var = None
 			val = None

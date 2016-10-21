@@ -5,7 +5,8 @@ import os
 
 def main():
 	""""""
-	args1 = {"command" : "/usr/bin/whoami",
+	args1 = {"progname" : "whoami",
+			"command" : "/usr/bin/whoami",
 			"procnum" : 1,
 			"autolaunch" : True,
 			"starttime" : 5,
@@ -16,12 +17,14 @@ def main():
 			"exitcodes" : [0, 2, 4, 5],
 			"stdout" : "/usr/bin/whoami.stdout",
 			"stderr" : "/usr/bin/whoami.stderr",
-			"redir" : "/usr/bin/whoami.redir",
+			"redout" : False,
+			"rederr" : False,
 			"envvars" : {"ENV1" : "VAL1", "ENV2" : "VAL2"},
 			"workingdir" : "/tmp",
 			"umask" : "077"}
 
-	args2 = {"command" : "/usr/bin/whois",
+	args2 = {"progname" : "top",
+			"command" : "/usr/bin/top",
 			"procnum" : 1,
 			"autolaunch" : True,
 			"starttime" : 5,
@@ -32,7 +35,8 @@ def main():
 			"exitcodes" : [0, 2, 4, 5],
 			"stdout" : "/usr/bin/whois.stdout",
 			"stderr" : "/usr/bin/whois.stderr",
-			"redir" : "/usr/bin/whois.redir",
+			"redout" : False,
+			"rederr" : False,
 			"envvars" : {"ENV1" : "VAL1", "ENV2" : "VAL2"},
 			"workingdir" : "/tmp",
 			"umask" : "077"}
