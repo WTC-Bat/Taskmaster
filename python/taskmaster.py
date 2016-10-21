@@ -53,39 +53,32 @@ class Taskmaster(cmd.Cmd):
 			if not self.programs:
 				print("Load config first!")
 				return
-		# elif line.startswith("sched"):
-		# 	sc = line.split()
-		# 	if count(sc) == 1:
-		# 		testsched()
-		# 		print("\n---Monitoring " + str(len(self.programs))
-		# 				+ " programs---\n")
-		# 		self.testsched()
-		# 	else:
-			print("\n---Monitoring " + str(len(self.programs))
-					+ " programs---\n")
-			self.testsched()
+		elif line.startswith("sched"):
+			sc = line.split()
+			if len(sc) == 1:
+				for program in self.programs:
+					program.runAndMonitor()
+				print("\n---Monitoring " + str(len(self.programs))
+						+ " programs---\n")
+			else:
+				for program in self.programs:
+					if program.progname == sc[1]:
+						program.runAndMonitor()
+			# print("\n---Monitoring " + str(len(self.programs))
+			# 		+ " programs---\n")
+			# self.testsched()
 		else:
 			print("Unknown command")
 
 
-	def testsched(self):
+	def testsched(self, program):
 		""""""
 		#
 		#	initialtests
 		#
 
-
-
-
-		# for program in self.programs:
-		# 	self.procs.append(program.runAndMonitor())
-
-
-		# print("testsched")
-		# tim = threading.Timer(5, self.testsched)
-		# tim.start()
-
 		# program.runAndMonitor()
+
 		#
 		#	initialtests
 		#

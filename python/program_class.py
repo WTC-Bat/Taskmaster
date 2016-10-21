@@ -10,6 +10,7 @@ class Program():
 	""""""
 	def __init__(self, args=None):
 		""""""
+		self.proc = None
 		#self.useShell = False?
 		if type(args) is dict:
 			for key, val in args.iteritems():
@@ -72,13 +73,16 @@ class Program():
 
 	def runAndMonitor(self):
 		""""""
+		args = shlex.split(self.command)
 		# args = shlex.split(os.path.realpath(self.command))
-		# # pop = subprocess.Popen(args)
-		# return (subprocess.Popen(args))
+		#args = self.command.split()
+		self.proc = subprocess.Popen(args)
+		# self.proc = subprocess.Popen(args, shell=True)
+		checkStatus()
 
-		# STILL NEED TO SPLIT PATH FROM ARGS IN 'self.command'
-		# pop = subprocess.Popen(os.path.realpath(os.path.normpath(self.command)))
-		# sch = sched.scheduler(time.time, time.sleep)
-		# # sch.enter(1, 1, self.t(pop.poll()), self)
-		# sch.enter(1, 1, self.t(), self)
-		# sch.run()
+	def checkStatus(self):
+		""""""
+		if self.proc.poll() == None:
+			print("RUNNING")
+		tim = threading.Timer(1, checkStatus)
+		tim.start()

@@ -54,7 +54,7 @@
 		<autolaunch>True</autolaunch>
 		<stoptime>10</stoptime>
 		<command>/usr/bin/top</command>
-		<stderr>/usr/bin/whois.stderr</stderr>
+		<stderr>/tmp/top.stderr</stderr>
 		<rederr>False</rederr>
 		<procnum>1</procnum>
 		<starttime>5</starttime>
