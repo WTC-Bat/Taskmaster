@@ -4,6 +4,7 @@ import shlex
 import os
 import sched
 import time
+import threading
 
 class Program():
 	""""""
@@ -65,15 +66,13 @@ class Program():
 
 	def runAndMonitor(self):
 		""""""
-		#args = shlex.split(os.path.realpath(self.command))
-		# pop = subprocess.Popen(args)
+		# args = shlex.split(os.path.realpath(self.command))
+		# # pop = subprocess.Popen(args)
+		# return (subprocess.Popen(args))
 
 		# STILL NEED TO SPLIT PATH FROM ARGS IN 'self.command'
 		# pop = subprocess.Popen(os.path.realpath(os.path.normpath(self.command)))
 		# sch = sched.scheduler(time.time, time.sleep)
-		# sch.enter(1, 1, self.t(pop.poll()), self)
+		# # sch.enter(1, 1, self.t(pop.poll()), self)
+		# sch.enter(1, 1, self.t(), self)
 		# sch.run()
-
-
-	def t(self, poppoll):
-		print poppoll

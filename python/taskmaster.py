@@ -4,6 +4,7 @@ import cmd
 import platform
 import sched
 import tmdata
+import threading
 
 #	subprocess
 
@@ -17,6 +18,7 @@ class Taskmaster(cmd.Cmd):
 		else:
 			self.prompt = "Taskmaster> "
 		self.programs = list()
+		self.procs = list()	#?
 
 	def emptyline(self):
 		""""""
@@ -50,22 +52,35 @@ class Taskmaster(cmd.Cmd):
 		elif line == "sched":
 			if not self.programs:
 				print("Load config first!")
-				return (1)
+				return
 			print("\n---Monitoring " + str(len(self.programs))
 					+ " programs---\n")
-			self.testsched(self.programs[0])
+			self.testsched()
+		else:
+			print("Unknown command")
 
 
-	def testsched(self, program):
+	def testsched(self):
 		""""""
 		#
 		#	initialtests
 		#
-		program.runAndMonitor()
+
+		
+
+
+		# for program in self.programs:
+		# 	self.procs.append(program.runAndMonitor())
+
+
+		# print("testsched")
+		# tim = threading.Timer(5, self.testsched)
+		# tim.start()
+
+		# program.runAndMonitor()
 		#
 		#	initialtests
 		#
-		#sch = sched.scheduler()
 
 
 def main():
