@@ -76,13 +76,16 @@ class Program():
 		args = shlex.split(self.command)
 		# args = shlex.split(os.path.realpath(self.command))
 		#args = self.command.split()
-		self.proc = subprocess.Popen(args)
 		# self.proc = subprocess.Popen(args, shell=True)
-		checkStatus()
+		# self.proc = subprocess.Popen(args, stdin=subprocess.PIPE, stderr=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
+		# print self.proc.stdout.read()
+		# self.proc.flush()
+		self.proc.wait()
+		# self.proc = subprocess.Popen(args, shell=True)
+		self.checkStatus()
 
 	def checkStatus(self):
 		""""""
-		if self.proc.poll() == None:
-			print("RUNNING")
-		tim = threading.Timer(1, checkStatus)
+		self.proc.poll()
+		tim = threading.Timer(1, self.checkStatus)
 		tim.start()
