@@ -11,6 +11,9 @@ class Program():
 	def __init__(self, args=None):
 		""""""
 		self.proc = None
+		self.killprocess = False
+		self.procout = None
+		self.procerr = None
 		#self.useShell = False?
 		if type(args) is dict:
 			for key, val in args.iteritems():
@@ -73,19 +76,26 @@ class Program():
 
 	def runAndMonitor(self):
 		""""""
-		args = shlex.split(self.command)
-		# args = shlex.split(os.path.realpath(self.command))
-		#args = self.command.split()
-		# self.proc = subprocess.Popen(args, shell=True)
-		# self.proc = subprocess.Popen(args, stdin=subprocess.PIPE, stderr=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
-		# print self.proc.stdout.read()
+		# args = shlex.split(self.command)
+		args = self.command.split()
+		self.proc = subprocess.Popen(args, stderr=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
 		# self.proc.flush()
-		self.proc.wait()
-		# self.proc = subprocess.Popen(args, shell=True)
+		#self.proc.wait()
 		self.checkStatus()
 
 	def checkStatus(self):
 		""""""
 		self.proc.poll()
+		# self.procerr, self.procout = self.proc.communicate()
 		tim = threading.Timer(1, self.checkStatus)
 		tim.start()
+		if (self.killprocess == True):
+			tim.cancel()
+			self.proc.terminate()
+		if (self.proc.returncode != None):
+			tim.cancel()
+			for rcode in self.exitcodes:
+				if (self.proc.returncode == rcode):
+					print("GRACEFUL")
+					return
+			print("UNEXPECTED")

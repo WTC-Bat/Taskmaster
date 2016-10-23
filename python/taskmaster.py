@@ -40,7 +40,9 @@ class Taskmaster(cmd.Cmd):
 
 	def do_exit(self, args):
 		'''Exits the Taskmaster shell when user inputs "exit"'''
-		return -1
+		for program in self.programs:
+			program.killprocess = True
+		exit(0)
 
 	def default(self, line):
 		'''Custom input handling'''
