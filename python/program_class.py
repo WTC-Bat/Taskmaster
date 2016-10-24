@@ -5,6 +5,7 @@ import os
 import sched
 import time
 import threading
+import processtimer_class as ptc
 
 class Program():
 	""""""
@@ -77,11 +78,13 @@ class Program():
 	def runAndMonitor(self):
 		""""""
 		# args = shlex.split(self.command)
-		args = self.command.split()
-		self.proc = subprocess.Popen(args, stderr=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
-		# self.proc.flush()
-		#self.proc.wait()
-		self.checkStatus()
+		# args = self.command.split()
+		# self.proc = subprocess.Popen(args, stderr=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
+
+		proc = ptc.ProcessTimer(self)
+		proc.start()
+
+		# self.checkStatus()
 
 	def checkStatus(self):
 		""""""
