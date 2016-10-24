@@ -41,8 +41,10 @@ class Taskmaster(cmd.Cmd):
 
 	def do_exit(self, args):
 		'''Exits the Taskmaster shell when user inputs "exit"'''
-		# for program in self.programs:
-		# 	program.process.killprocess = True
+		if (len(self.programs) != 0):
+			for program in self.programs:
+				if (program.process != None):
+					program.process.killprocess = True
 		exit(0)
 
 	def default(self, line):

@@ -11,7 +11,7 @@ class Program():
 	""""""
 	def __init__(self, args=None):
 		""""""
-		# self.process = None
+		self.process = None
 		# self.killprocess = False
 		# self.procout = None
 		# self.procerr = None
@@ -77,8 +77,8 @@ class Program():
 
 	def runAndMonitor(self):
 		""""""
-		# self.process = procc.ProcessTimer(self)
-		# self.process.start()
-
-		process = procc.Process(self)
-		process.start()
+		# self.process = procc.Process(self)
+		self.process = procc.Process(self.__dict__)
+		self.process.start()
+		# process = procc.Process(self)
+		# process.start()
