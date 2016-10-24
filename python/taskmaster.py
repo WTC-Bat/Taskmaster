@@ -5,6 +5,7 @@ import platform
 import sched
 import tmdata
 import threading
+import process_class as procc
 
 #	subprocess
 
@@ -40,8 +41,8 @@ class Taskmaster(cmd.Cmd):
 
 	def do_exit(self, args):
 		'''Exits the Taskmaster shell when user inputs "exit"'''
-		for program in self.programs:
-			program.killprocess = True
+		# for program in self.programs:
+		# 	program.process.killprocess = True
 		exit(0)
 
 	def default(self, line):
@@ -66,24 +67,8 @@ class Taskmaster(cmd.Cmd):
 				for program in self.programs:
 					if program.progname == sc[1]:
 						program.runAndMonitor()
-			# print("\n---Monitoring " + str(len(self.programs))
-			# 		+ " programs---\n")
-			# self.testsched()
 		else:
 			print("Unknown command")
-
-
-	def testsched(self, program):
-		""""""
-		#
-		#	initialtests
-		#
-
-		# program.runAndMonitor()
-
-		#
-		#	initialtests
-		#
 
 
 def main():
