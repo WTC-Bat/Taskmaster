@@ -19,14 +19,14 @@ class Process(threading.Thread):
 		args = self.program["command"].split()
 		self.pop = subprocess.Popen(args, stderr=subprocess.PIPE,
 									stdout=subprocess.PIPE, shell=True)
-		# self.monitor_timer()
+		self.monitor_timer()
 		# self.monitor_loop()
 
-		if (self.killprocess == True):
-			self.pop.terminate()
-
-		while self.killprocess == False:
-			self.monitor_loop()
+		# if (self.killprocess == True):
+		# 	self.pop.terminate()
+		#
+		# while self.killprocess == False:
+		# 	self.monitor_loop()
 
 	def monitor_timer(self):
 		tim = threading.Timer(1.0, self.monitor_timer)
