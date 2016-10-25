@@ -17,17 +17,9 @@ class Process(threading.Thread):
 	def run(self):
 		""""""
 		args = self.progd["command"].split()
-		# self.pop = subprocess.Popen(args, stderr=subprocess.PIPE,
-		# 							stdout=subprocess.PIPE, shell=True)
 		self.pop = subprocess.Popen(args, stderr=subprocess.PIPE,
 									stdout=subprocess.PIPE)
 		self.monitor_timer()
-
-		# if (self.killprocess == True):
-		# 	self.pop.terminate()
-		#
-		# while self.killprocess == False:
-		# 	self.monitor_loop()
 
 	def monitor_timer(self):
 		tim = threading.Timer(1.0, self.monitor_timer)
@@ -44,19 +36,3 @@ class Process(threading.Thread):
 					return
 			tim.cancel()
 			return
-
-	def monitor_loop(self):
-		""""""
-		self.pop.poll()
-		# if (self.killprocess == True):
-		# 	self.pop.terminate()
-		# 	return
-		if (self.pop.returncode != None):
-			for rcode in self.progd["exitcodes"]:
-				if (rcode == self.pop.returncode):
-					self.killprocess = True
-					return
-			self.killprocess = True
-			return
-		# time.sleep(1)
-		# self.monitor_loop()

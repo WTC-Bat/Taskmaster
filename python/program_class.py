@@ -12,7 +12,6 @@ class Program():
 	def __init__(self, args=None):
 		""""""
 		self.process = None
-		#self.useShell = False?
 		if type(args) is dict:
 			for key, val in args.iteritems():
 				if key == "progname":
