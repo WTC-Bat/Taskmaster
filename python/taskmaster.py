@@ -5,6 +5,7 @@ import platform
 import sched
 import tmdata
 import threading
+from tmlog import log
 
 class Taskmaster(cmd.Cmd):
 	""""""
@@ -70,6 +71,10 @@ class Taskmaster(cmd.Cmd):
 						program.runAndMonitor()
 						print("\n---Monitoring " + program.progname + " ---\n")
 				#check if progname is in config and if not notify user!!!
+		elif (line == "log"):
+			#?#Untested#?#
+			log(time.ctime() + "\tTEST LOG!")
+			log(time.ctime() + "\tTEST LOG END!")
 		else:
 			print("Unknown command")
 

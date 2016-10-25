@@ -6,3 +6,5 @@ def log(message, logfile):
 	if not (os.path.exists(logfile)):
 		f = open(path, "w")
 		f.close()
+	with open(path, "a") as log:
+		log.write(message + "\n")
