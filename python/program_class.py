@@ -12,9 +12,6 @@ class Program():
 	def __init__(self, args=None):
 		""""""
 		self.process = None
-		# self.killprocess = False
-		# self.procout = None
-		# self.procerr = None
 		#self.useShell = False?
 		if type(args) is dict:
 			for key, val in args.iteritems():
@@ -73,12 +70,8 @@ class Program():
 	def __eq__(self, obj):
 		""""""
 		return (str(self) == str(obj))
-		# return (self.__dict__ == obj.__dict__)
 
 	def runAndMonitor(self):
 		""""""
-		# self.process = procc.Process(self)
 		self.process = procc.Process(self.__dict__)
 		self.process.start()
-		# process = procc.Process(self)
-		# process.start()
