@@ -2,8 +2,10 @@
 import os
 import cmd
 import time
+import signal
 import platform
 import tmdata
+import tmfuncs
 import process_class as procc
 # import tmmsg
 from tmlog import log
@@ -46,10 +48,21 @@ class Taskmaster(cmd.Cmd):
 		'''Exits the Taskmaster shell when user inputs "exit"'''
 		if (len(self.programs) != 0):
 			for program in self.programs:
-				if (program.process != None):
-					program.process.killprocess = True
+				if (len(program.processes) > 0):
+					for proc in program.processes:
+						proc.killprocess = True
+				# if (program.processes != None):
+				# 	program.process.killprocess = True
 		log("TaskMaster exiting", "./tmlog.txt", False)
 		exit(0)
+
+
+		# if (len(self.programs) != 0):
+		# 	for program in self.programs:
+		# 		if (program.process != None):
+		# 			program.process.killprocess = True
+		# log("TaskMaster exiting", "./tmlog.txt", False)
+		# exit(0)
 
 	def default(self, line):
 		'''Custom input handling'''
@@ -57,9 +70,9 @@ class Taskmaster(cmd.Cmd):
 		log("Input: '" + line + "'", "./tmlog.txt", False)
 		if (line == "cheese"):				###
 			print "Crackers"
-		elif line == "load":				###
-			self.programs = tmdata.loadConfig(os.path.realpath("./config.xml"))
-			print("\n---Programs Loaded---\n")
+		# elif line == "load":				###
+		# 	self.programs = tmdata.loadConfig(os.path.realpath("./config.xml"))
+		# 	print("\n---Programs Loaded---\n")
 		elif line.startswith("monitor"):	###
 			if not self.programs:
 				print("Load config first!")
@@ -87,26 +100,48 @@ class Taskmaster(cmd.Cmd):
 			# log("Showing status ")	???
 			# 	showstatus()
 		elif (line.startswith("stop")):
-			print("STOP")
+			splt = line.split()
+			if (len(splt) == 1):
+				print ("Please specify which program\s to stop "
+						+ "(stop all -OR- stop [program1 name] "
+						+ "[program2 name])")
+			elif (len(splt) > 1):
+				print("STOP " + splt[1])
+			elif (len(splt) == 2 and splt[1] == "all"):
+				print("stop all")
+
 		elif (line.startswith("start")):
 			print("START")
 		else:
 			log("Unknown command: " + line, "./tmlog.txt", True)
 
+	def handleSignals(self, signum, frame):
+		""""""
+		if (signum == 2):
+			print("")
+			self.do_exit(None)
+
 
 def autolaunchPrograms(taskmaster):
 	""""""
 	cnt = 0
+	num = 0
+	totnum = 0
 
 	if (len(taskmaster.programs) == 0):
 		log("WARNING: No programs in config file", "./tmlog.txt", True)
 		return
 	for program in taskmaster.programs:
 		if (program.autolaunch == True):
-			program.runAndMonitor()
+			while num < program.procnum:
+				program.runAndMonitor()
+				num += 1
+			totnum += num
+			num = 0
 			cnt += 1
 	if (cnt > 0):
-		log(str(cnt) + " programs launched automatically", "./tmlog.txt", True)
+		log(str(totnum) + " processes (" + str(cnt) + " programs) launched"
+			+ " automatically",	"./tmlog.txt", True)
 	else:
 		log("No programs set to launch automatically", "./tmlog.txt", True)
 

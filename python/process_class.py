@@ -1,7 +1,7 @@
+import time
 import threading
 import subprocess
-import time
-import exceptions as exc
+# import exceptions as exc
 from tmlog import log
 
 class Process(threading.Thread):
@@ -25,7 +25,7 @@ class Process(threading.Thread):
 		try:
 			self.pop = subprocess.Popen(args, stderr=subprocess.PIPE,
 										stdout=subprocess.PIPE)
-		except (exc.ValueError, exc.OSError) as e:
+		except (ValueError, OSError) as e:
 			print("Invalid arguments given to 'subprocess.Popen'")
 			print("Program Name: " + self.progd["progname"])
 			log("Caught exception '" + str(e) + "'", "./tmlog.txt", False)
@@ -75,3 +75,15 @@ class Process(threading.Thread):
 			if (rcode == self.pop.returncode):
 				return (True)
 		return (False)
+
+	# def handleSignal(self, signum, frame):
+	# 	""""""
+	# 	print("PROCESS CAUGHT SIGNAL")
+	# 	self.pop.send_signal(signum)
+	# 	self.killprocess = True
+	#
+	# def registerSignal(self):
+	# 	""""""
+	# 	signum = tmfuncs.getSignalValue(self.progd["stopsig"])
+	# 	if (signum != -42):
+	# 		signal.signal(signum, self.handleSignal)

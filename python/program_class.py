@@ -29,7 +29,7 @@ class Program():
 		self.stderr = self.workingdir + self.progname + ".tm.stderr"
 		self.redout = False
 		self.rederr = False
-		self.process = None
+		self.processes = list()
 
 		# print("UMASK: " + format(self.umask, "03o"))
 
@@ -92,10 +92,24 @@ class Program():
 		""""""
 		return (str(self) == str(obj))
 
+	# def handleSignal(self, signum, frame):
+	# 	""""""
+	#
+	# def registerSignal(self.stopsig):
+	# 	""""""
+
 	def runAndMonitor(self):
 		""""""
-		self.process = procc.Process(self.__dict__)
-		self.process.start()
+		proc = procc.Process(self.__dict__)
+		self.processes.append(proc)
+		proc.start()
 		log("Program '" + self.progname + "' process starting", "./tmlog.txt",
 			False)
-		time.sleep(0.3)
+		time.sleep(0.3)	#!
+
+
+		# self.process = procc.Process(self.__dict__)
+		# self.process.start()
+		# log("Program '" + self.progname + "' process starting", "./tmlog.txt",
+		# 	False)
+		# time.sleep(0.3)

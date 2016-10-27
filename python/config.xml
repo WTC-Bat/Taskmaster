@@ -50,7 +50,7 @@
 		<workingdir>/tmp</workingdir>
 		<umask>077</umask>
 		<progname>top</progname>
-		<stopsig>SSIG</stopsig>
+		<stopsig>SIGINT</stopsig>
 		<autolaunch>True</autolaunch>
 		<stoptime>10</stoptime>
 		<command>/usr/bin/top</command>
