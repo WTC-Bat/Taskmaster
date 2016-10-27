@@ -5,6 +5,11 @@ import platform
 import sched
 import tmdata
 import threading
+import process_class as procc
+import time
+from tmlog import log
+
+#	subprocess
 
 class Taskmaster(cmd.Cmd):
 	""""""
@@ -15,10 +20,11 @@ class Taskmaster(cmd.Cmd):
 			self.prompt = "\033[94mTaskmaster>\033[0m "
 		else:
 			self.prompt = "Taskmaster> "
-		self.programs = tmdata.loadConfig(os.path.realpath("./config.xml"))
-		if (len(self.programs) > 0):
-			print("\n---Programs Loaded---\n")
-		#autolaunchPrograms()
+			self.programs = list
+		# self.programs = tmdata.loadConfig(os.path.realpath("./config.xml"))
+		# if (len(self.programs) > 0):
+		# 	print("\n---Programs Loaded---\n")
+		# self.autolaunchPrograms()?
 
 	def emptyline(self):
 		""""""
@@ -69,18 +75,22 @@ class Taskmaster(cmd.Cmd):
 						program.runAndMonitor()
 						print("\n---Monitoring " + program.progname + " ---\n")
 				#check if progname is in config and if not notify user!!!
+		# elif (line == "log"):
+		# 	#?#Untested#?#
+		# 	log(time.ctime() + "\tTEST LOG!", "./log.txt")
+		# 	log(time.ctime() + "\tTEST LOG END!", "./log.txt")
 		else:
 			print("Unknown command")
 
-	def autolaunchPrograms(self):
-		""""""
-		cnt = 0
-		for program in self.programs:
-			if (program.autolaunch == True):
-				program.runAndMonitor()
-				cnt++
-		print(str(cnt) + " programs launched automatically"
 
+def autolaunchPrograms(taskmaster):
+	""""""
+	cnt = 0
+	for program in taskmaster.programs:
+		if (program.autolaunch == True):
+			program.runAndMonitor()
+			cnt += 1
+	print(str(cnt) + " programs launched automatically")
 
 
 def main():
@@ -90,6 +100,10 @@ def main():
 		os.system("clear")
 	else:
 		os.system("cls")
+	tm.programs = tmdata.loadConfig(os.path.realpath("./config.xml"))
+	if (len(tm.programs) > 0):
+		print("\n---Programs Loaded---\n")
+	autolaunchPrograms(tm)
 	tm.cmdloop()
 
 

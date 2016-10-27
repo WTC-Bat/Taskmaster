@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 import os
 import cmd
+import time
 import platform
-import sched
 import tmdata
-import threading
+import process_class as procc
+# import tmmsg
 from tmlog import log
 
 class Taskmaster(cmd.Cmd):
@@ -16,11 +17,12 @@ class Taskmaster(cmd.Cmd):
 			self.prompt = "\033[94mTaskmaster>\033[0m "
 		else:
 			self.prompt = "Taskmaster> "
-			self.programs = list
+		self.programs = list
 		# self.programs = tmdata.loadConfig(os.path.realpath("./config.xml"))
 		# if (len(self.programs) > 0):
 		# 	print("\n---Programs Loaded---\n")
-		# self.autolaunchPrograms()
+		# self.autolaunchPrograms()?
+		log("Taskmaster object initialized", "./tmlog.txt", False)
 
 	def emptyline(self):
 		""""""
@@ -46,16 +48,18 @@ class Taskmaster(cmd.Cmd):
 			for program in self.programs:
 				if (program.process != None):
 					program.process.killprocess = True
+		log("TaskMaster exiting", "./tmlog.txt", False)
 		exit(0)
 
 	def default(self, line):
 		'''Custom input handling'''
-		if (line == "cheese"):
+		log("Input: '" + line + "'", "./tmlog.txt", False)
+		if (line == "cheese"):				###
 			print "Crackers"
-		# elif line == "load":
-		# 	self.programs = tmdata.loadConfig(os.path.realpath("./config.xml"))
-		# 	print("\n---Programs Loaded---\n")
-		elif line.startswith("monitor"):
+		elif line == "load":				###
+			self.programs = tmdata.loadConfig(os.path.realpath("./config.xml"))
+			print("\n---Programs Loaded---\n")
+		elif line.startswith("monitor"):	###
 			if not self.programs:
 				print("Load config first!")
 				return
@@ -68,50 +72,57 @@ class Taskmaster(cmd.Cmd):
 			else:
 				for program in self.programs:
 					if program.progname == sc[1]:
-						program.runAndMonitor()
 						print("\n---Monitoring " + program.progname + " ---\n")
+						program.runAndMonitor()
 				#check if progname is in config and if not notify user!!!
-		elif (line == "log"):
-			#?#Untested#?#
-			log(time.ctime() + "\tTEST LOG!")
-			log(time.ctime() + "\tTEST LOG END!")
+		elif line == "dlog":
+			os.remove("./tmlog.txt")
+			print("./tmlog.txt deleted!")
+		#----------------------------------------------------------------#
+		elif (line.startswith("status")):
+			print("ALL STATUS")
+			# splt = line.split()
+			# if (len(splt) == 1):
+			# log("Showing status ")	???
+			# 	showstatus()
+		elif (line.startswith("stop")):
+			print("STOP")
+		elif (line.startswith("start")):
+			print("START")
 		else:
-			print("Unknown command")
-
-	# def autolaunchPrograms(self):
-	# 	""""""
-	# 	cnt = 0
-	# 	for program in self.programs:
-	# 		if (program.autolaunch == True):
-	# 			program.runAndMonitor()
-	# 			cnt += 1
-	# 	print(str(cnt) + " programs launched automatically")
-
-	# def handleInput(self, line):
-	# 	""""""
+			log("Unknown command: " + line, "./tmlog.txt", True)
 
 
 def autolaunchPrograms(taskmaster):
 	""""""
 	cnt = 0
+
+	if (len(taskmaster.programs) == 0):
+		log("WARNING: No programs in config file", "./tmlog.txt", True)
+		return
 	for program in taskmaster.programs:
 		if (program.autolaunch == True):
 			program.runAndMonitor()
 			cnt += 1
-	print(str(cnt) + " programs launched automatically")
+	if (cnt > 0):
+		log(str(cnt) + " programs launched automatically", "./tmlog.txt", True)
+	else:
+		log("No programs set to launch automatically", "./tmlog.txt", True)
 
 
 def main():
 	""""""
+	log("TaskMaster started", "./tmlog.txt", False)
 	tm = Taskmaster()
+
 	if str(platform.system()) != "Windows":
 		os.system("clear")
 	else:
 		os.system("cls")
+	log("Loading config file", "./tmlog.txt", False)
 	tm.programs = tmdata.loadConfig(os.path.realpath("./config.xml"))
-	if (len(tm.programs) > 0):
-		print("\n---Programs Loaded---\n")
-	autolaunchPrograms(tm)
+	log("Config file successfully loaded", "./tmlog.txt", False)
+	# autolaunchPrograms(tm)
 	tm.cmdloop()
 
 

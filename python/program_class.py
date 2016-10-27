@@ -6,12 +6,33 @@ import sched
 import time
 import threading
 import process_class as procc
+from tmlog import log
 
 class Program():
 	""""""
 	def __init__(self, args=None):
 		""""""
+		self.progname = "TMProg"
+		self.command = ""
+		self.procnum = 1
+		self.autolaunch = False
+		self.starttime = 5
+		self.restart = "never"
+		self.retries = 3
+		self.stopsig = "SIG"
+		self.stoptime = 10
+		self.exitcode = [0]
+		self.envvars = dict
+		self.workingdir = "./"
+		self.umask = 022
+		self.stdout = self.workingdir + self.progname + ".tm.stdout"
+		self.stderr = self.workingdir + self.progname + ".tm.stderr"
+		self.redout = False
+		self.rederr = False
 		self.process = None
+
+		# print("UMASK: " + format(self.umask, "03o"))
+
 		if type(args) is dict:
 			for key, val in args.iteritems():
 				if key == "progname":
@@ -52,6 +73,7 @@ class Program():
 					self.workingdir = val
 				elif key == "umask":
 					self.umask = val
+			log("Program '" + self.progname + "' initialized", "./tmlog.txt", False)
 
 	def __str__(self):
 		""""""
@@ -74,3 +96,6 @@ class Program():
 		""""""
 		self.process = procc.Process(self.__dict__)
 		self.process.start()
+		log("Program '" + self.progname + "' process starting", "./tmlog.txt",
+			False)
+		time.sleep(0.3)
