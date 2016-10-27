@@ -53,6 +53,7 @@ class Taskmaster(cmd.Cmd):
 
 	def default(self, line):
 		'''Custom input handling'''
+#------------------------------------------------------------------------------#
 		log("Input: '" + line + "'", "./tmlog.txt", False)
 		if (line == "cheese"):				###
 			print "Crackers"
@@ -78,7 +79,7 @@ class Taskmaster(cmd.Cmd):
 		elif line == "dlog":
 			os.remove("./tmlog.txt")
 			print("./tmlog.txt deleted!")
-		#----------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 		elif (line.startswith("status")):
 			print("ALL STATUS")
 			# splt = line.split()
@@ -121,7 +122,8 @@ def main():
 		os.system("cls")
 	log("Loading config file", "./tmlog.txt", False)
 	tm.programs = tmdata.loadConfig(os.path.realpath("./config.xml"))
-	log("Config file successfully loaded", "./tmlog.txt", False)
+	log(str(len(tm.programs)) + " programs loaded from config", "./tmlog.txt",
+		False)
 	# autolaunchPrograms(tm)
 	tm.cmdloop()
 

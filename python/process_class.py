@@ -23,7 +23,7 @@ class Process(threading.Thread):
 		""""""
 		args = self.progd["command"].split()	# or shlex.split()
 		try:
-			self.pop = subprocess.Popen("minimineri", stderr=subprocess.PIPE,
+			self.pop = subprocess.Popen(args, stderr=subprocess.PIPE,
 										stdout=subprocess.PIPE)
 		except (exc.ValueError, exc.OSError) as e:
 			print("Invalid arguments given to 'subprocess.Popen'")
@@ -46,18 +46,27 @@ class Process(threading.Thread):
 		if (self.killprocess == True):
 			tim.cancel()
 			self.pop.terminate()
+			log("Terminating '" + self.name + "'", "./tmlog.txt", False)
 			return
 		if (self.pop.returncode != None):
 			self.active = False	#Here okay? Is it inactive at this point
 			if (self.progd["restart"] == "always"):
 				tim.cancel()
-				self.run()		#restart?
+				log("'" + self.name + "' returned valid code", "./tmlog.txt",
+					False)
+				self.run()		#restart? will it work?
+				log("Restarting '" + self.name + "'", "./tmlog.txt", False)
 			elif (self.progd["restart"] == "unexpected"):
 				if (self.expectedReturnCode() == False
 						and self.retries != self.progd["retries"]):
 					tim.cancel()
 					self.retries += 1
-					self.run()	#restart?
+					log("'" + self.name + "' terminated unexpectedly",
+						"./tmlog.txt", False)
+					self.run()	#restart? will it work?
+					log("Attempting to relaunch '" + self.name + "'",
+						"./tmlog.txt", False)
+					log("Retries: " + str(self.retries))
 			#terminate?
 
 	def expectedReturnCode(self):
@@ -66,19 +75,3 @@ class Process(threading.Thread):
 			if (rcode == self.pop.returncode):
 				return (True)
 		return (False)
-
-	# def monitor_timer(self):
-	# 	tim = threading.Timer(1.0, self.monitor_timer)
-	# 	tim.start()
-	# 	self.pop.poll()
-	# 	if (self.killprocess == True):
-	# 		tim.cancel()
-	# 		self.pop.terminate()
-	# 		return
-	# 	if (self.pop.returncode != None):
-	# 		for rcode in self.progd["exitcodes"]:
-	# 			if (rcode == self.pop.returncode):
-	# 				tim.cancel()
-	# 				return
-	# 		tim.cancel()
-	# 		return
