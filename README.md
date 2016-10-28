@@ -6,6 +6,7 @@
 # Exit problems
 
 ### TODO:
+	- Logging
 	- Program Aspects:
 		- Progname
 			- Done!
@@ -24,7 +25,7 @@
 		- Stoptime
 			-
 		- Stopsig
-		 	-
+		 	- Done!		(!f)
 		- Stderr
 			-
 		- Stdout
