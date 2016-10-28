@@ -45,8 +45,9 @@ class Process(threading.Thread):
 		self.pop.poll()
 		if (self.killprocess == True):
 			tim.cancel()
-			self.pop.terminate()
+			# self.pop.terminate()
 			log("Terminating '" + self.name + "'", "./tmlog.txt", False)
+			# self.active = False
 			return
 		if (self.pop.returncode != None):
 			self.active = False	#Here okay? Is it inactive at this point

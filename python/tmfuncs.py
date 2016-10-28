@@ -13,7 +13,7 @@ def getSignalValue(sig):
 			if (isinstance(sig,(int, long)) == True):
 				if (val == sig):
 					return val
-			elif (sig.isnumeric() == True):
+			elif (sig.isdigit() == True):
 				if (val == int(sig)):
 					return val
 			else:

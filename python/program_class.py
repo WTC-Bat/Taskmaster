@@ -107,7 +107,6 @@ class Program():
 			False)
 		time.sleep(0.3)	#!
 
-
 		# self.process = procc.Process(self.__dict__)
 		# self.process.start()
 		# log("Program '" + self.progname + "' process starting", "./tmlog.txt",

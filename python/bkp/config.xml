@@ -17,7 +17,7 @@
 		<workingdir>/tmp</workingdir>
 		<umask>077</umask>
 		<progname>whoami</progname>
-		<stopsig>SIGKILL</stopsig>
+		<stopsig>SSIG</stopsig>
 		<autolaunch>True</autolaunch>
 		<stoptime>10</stoptime>
 		<command>/usr/bin/whoami</command>
@@ -25,7 +25,7 @@
 		<rederr>False</rederr>
 		<procnum>1</procnum>
 		<starttime>5</starttime>
-		<restart>always</restart>
+		<restart>never</restart>
 		<exitcodes>
 			<code>0</code>
 			<code>2</code>
@@ -50,13 +50,13 @@
 		<workingdir>/tmp</workingdir>
 		<umask>077</umask>
 		<progname>top</progname>
-		<stopsig>SIGKILL</stopsig>
+		<stopsig>SIGINT</stopsig>
 		<autolaunch>True</autolaunch>
 		<stoptime>10</stoptime>
 		<command>/usr/bin/top</command>
 		<stderr>/tmp/top.stderr</stderr>
 		<rederr>False</rederr>
-		<procnum>3</procnum>
+		<procnum>1</procnum>
 		<starttime>5</starttime>
 		<restart>never</restart>
 		<exitcodes>
