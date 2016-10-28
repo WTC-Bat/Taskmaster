@@ -115,8 +115,8 @@ class Taskmaster(cmd.Cmd):
 						+ "[program2 name])")
 			elif (len(splt) > 1):
 				self.stopPrograms(splt)
-			elif (len(splt) == 2 and splt[1] == "all"):
-				self.stopAllPrograms()
+				if (len(splt) == 2 and splt[1] == "all"):
+					self.stopAllPrograms()
 
 		elif (line.startswith("start")):
 			print("START")
@@ -130,7 +130,7 @@ class Taskmaster(cmd.Cmd):
 			for proc in prog.processes:
 				signum = tmfuncs.getSignalValue(prog.stopsig)
 				proc.pop.send_signal(signum)
-				proc.killprocess = True
+				proc.tmexit = True
 			prog.processes = list()
 
 
@@ -147,7 +147,7 @@ class Taskmaster(cmd.Cmd):
 						for proc in prog.processes:
 							signum = tmfuncs.getSignalValue(prog.stopsig)
 							proc.pop.send_signal(signum)
-							proc.killprocess = True
+							proc.tmexit = True
 						prog.processes = list()
 			cnt += 1
 
@@ -161,10 +161,12 @@ class Taskmaster(cmd.Cmd):
 		for prog in self.programs:
 			if (len(prog.processes) > 0):
 				for proc in prog.processes:
-					if (proc.active == False or proc.is_alive() == False):
-						print(prog.processes)
+					if (proc.active == False):
+					# if (proc.is_alive() == False):
+						# print(prog.processes)
 						prog.processes.remove(proc)
-						print(prog.processes)
+						log("Removing " + proc.name, "./tmlog.txt", False)
+						# print(prog.processes)
 
 
 	def handleSigint(self, signum, frame):

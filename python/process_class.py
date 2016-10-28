@@ -2,6 +2,7 @@ import time
 import threading
 import subprocess
 # import exceptions as exc
+import tmfuncs
 from tmlog import log
 
 class Process(threading.Thread):
@@ -12,7 +13,7 @@ class Process(threading.Thread):
 		self.stderr = None
 		self.pop = None
 		self.progd = progdict
-		self.killprocess = False
+		self.tmexit = False
 		self.name = "Thread-" + self.progd["progname"]
 		self.active = False
 		self.retries = 0
@@ -43,31 +44,37 @@ class Process(threading.Thread):
 		tim = threading.Timer(1.0, self.monitor_timer)
 		tim.start()
 		self.pop.poll()
-		if (self.killprocess == True):
+		if (self.tmexit == True):
 			tim.cancel()
 			# self.pop.terminate()
+			if (self.is_alive()):
+				self.pop.send_signal(tmfuncs.getSignalValue(self.progd["stopsig"]))
 			log("Terminating '" + self.name + "'", "./tmlog.txt", False)
-			# self.active = False
+			self.active = False
 			return
 		if (self.pop.returncode != None):
-			self.active = False	#Here okay? Is it inactive at this point
+			tim.cancel()
 			if (self.progd["restart"] == "always"):
-				tim.cancel()
-				log("'" + self.name + "' returned valid code", "./tmlog.txt",
-					False)
-				self.run()		#restart? will it work?
+				# tim.cancel()
+				self.run()
 				log("Restarting '" + self.name + "'", "./tmlog.txt", False)
 			elif (self.progd["restart"] == "unexpected"):
+				# tim.cancel()
 				if (self.expectedReturnCode() == False
 						and self.retries != self.progd["retries"]):
-					tim.cancel()
 					self.retries += 1
 					log("'" + self.name + "' terminated unexpectedly",
 						"./tmlog.txt", False)
-					self.run()	#restart? will it work?
+					self.run()
 					log("Attempting to relaunch '" + self.name + "'",
 						"./tmlog.txt", False)
 					log("Retries: " + str(self.retries))
+				else:
+					self.active = False
+			else:
+				# tim.cancel()
+				log(self.name + " stopped", "./tmlog.txt", False)
+				self.active = False
 			#terminate?
 
 	def expectedReturnCode(self):
@@ -81,7 +88,7 @@ class Process(threading.Thread):
 	# 	""""""
 	# 	print("PROCESS CAUGHT SIGNAL")
 	# 	self.pop.send_signal(signum)
-	# 	self.killprocess = True
+	# 	self.tmexit = True
 	#
 	# def registerSignal(self):
 	# 	""""""

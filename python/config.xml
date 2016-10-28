@@ -17,7 +17,7 @@
 		<workingdir>/tmp</workingdir>
 		<umask>077</umask>
 		<progname>whoami</progname>
-		<stopsig>SIGKILL</stopsig>
+		<stopsig>SIGTERM</stopsig>
 		<autolaunch>True</autolaunch>
 		<stoptime>10</stoptime>
 		<command>/usr/bin/whoami</command>
