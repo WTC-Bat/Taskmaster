@@ -1,9 +1,15 @@
+import os
 import signal
 
 
-def registerSignals(programs):
-	""""""
-	print("RS")
+def isExecutable(filepath):
+	"""
+	Return True if the file specified in 'filepath' is executable. If not,
+	False is returned
+	"""
+	if (os.path.isfile(filepath) and os.access(filepath, os.X_OK)):
+		return (True)
+	return (False)
 
 
 def getSignalValue(sig):

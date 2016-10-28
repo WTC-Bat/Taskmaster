@@ -92,12 +92,6 @@ class Program():
 		""""""
 		return (str(self) == str(obj))
 
-	# def handleSignal(self, signum, frame):
-	# 	""""""
-	#
-	# def registerSignal(self.stopsig):
-	# 	""""""
-
 	def runAndMonitor(self):
 		""""""
 		proc = procc.Process(self.__dict__)
@@ -105,10 +99,4 @@ class Program():
 		proc.start()
 		log("Program '" + self.progname + "' process starting", "./tmlog.txt",
 			False)
-		time.sleep(0.3)	#!
-
-		# self.process = procc.Process(self.__dict__)
-		# self.process.start()
-		# log("Program '" + self.progname + "' process starting", "./tmlog.txt",
-		# 	False)
-		# time.sleep(0.3)
+		# time.sleep(0.3)	#if th thread doesn't sleep here, output will interrupt prompt

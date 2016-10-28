@@ -20,7 +20,7 @@
 		<stopsig>SIGTERM</stopsig>
 		<autolaunch>True</autolaunch>
 		<stoptime>10</stoptime>
-		<command>/usr/bin/whoami</command>
+		<command>whoami</command>
 		<stderr>/usr/bin/whoami.stderr</stderr>
 		<rederr>False</rederr>
 		<procnum>1</procnum>
@@ -59,6 +59,39 @@
 		<procnum>3</procnum>
 		<starttime>5</starttime>
 		<restart>never</restart>
+		<exitcodes>
+			<code>0</code>
+			<code>2</code>
+			<code>4</code>
+			<code>5</code>
+		</exitcodes>
+	</Program>
+	<Program>
+		<envvars>
+			<envvar>
+				<var>ENV2</var>
+				<val>VAL2</val>
+			</envvar>
+			<envvar>
+				<var>ENV1</var>
+				<val>VAL1</val>
+			</envvar>
+		</envvars>
+		<retries>2</retries>
+		<redout>False</redout>
+		<stdout>/usr/bin/whoami.stdout</stdout>
+		<workingdir>/tmp</workingdir>
+		<umask>077</umask>
+		<progname>cheese</progname>
+		<stopsig>SIGTERM</stopsig>
+		<autolaunch>True</autolaunch>
+		<stoptime>10</stoptime>
+		<command>/usr/bin/cheese</command>
+		<stderr>/usr/bin/whoami.stderr</stderr>
+		<rederr>False</rederr>
+		<procnum>1</procnum>
+		<starttime>5</starttime>
+		<restart>always</restart>
 		<exitcodes>
 			<code>0</code>
 			<code>2</code>

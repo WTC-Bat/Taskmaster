@@ -2,7 +2,21 @@ import os
 import re
 import xml.etree.ElementTree as ET
 import xml.dom.minidom as MD
+import tmfuncs
+from tmlog import log
 from program_class import Program
+
+
+def checkProgramCommand(program):
+	""""""
+	cmd = ""
+	path = ""
+	for pth in os.environ["PATH"].split(os.pathsep):
+		cmd = program.command.split()
+		path = os.path.join(pth, cmd[0])
+		if (tmfuncs.isExecutable(cmd[0]) or tmfuncs.isExecutable(path)):
+			return (True)
+	return (False)
 
 
 def cleanConfig(config):
@@ -31,7 +45,12 @@ def loadConfig(config):
 		xroot = xdoc.getroot()
 		for xprog in xroot:
 			prog = programFromElement(xprog)
-			progs.append(prog)
+			if (checkProgramCommand(prog) == True):
+				progs.append(prog)
+			else:
+				log("'" + prog.progname + "' command invalid. Not loading",
+					"./tmlog.txt", True)
+			# progs.append(prog)
 	return (progs)
 
 

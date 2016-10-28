@@ -21,10 +21,6 @@ class Taskmaster(cmd.Cmd):
 			self.prompt = "Taskmaster> "
 		self.programs = list
 		self.monitor = False
-		# self.programs = tmdata.loadConfig(os.path.realpath("./config.xml"))
-		# if (len(self.programs) > 0):
-		# 	print("\n---Programs Loaded---\n")
-		# self.autolaunchPrograms()?
 		log("Taskmaster object initialized", "./tmlog.txt", False)
 
 	def emptyline(self):
@@ -50,27 +46,8 @@ class Taskmaster(cmd.Cmd):
 		self.monitor = False
 		if (len(self.programs) > 0):
 			self.stopAllPrograms()
-		# self.monitor = False
-		# if (len(self.programs) != 0):
-		# 	for program in self.programs:
-		# 		if (len(program.processes) > 0):
-		# 			for proc in program.processes:
-		# 				proc.killprocess = True
-						# signum = tmfuncs.getSignalValue(program.stopsig)
-						# proc.pop.send_signal(signum)
-				# if (program.processes != None):
-				# 	program.process.killprocess = True
 		log("TaskMaster exiting", "./tmlog.txt", False)
 		exit(0)
-		# sys.exit(0)
-
-
-		# if (len(self.programs) != 0):
-		# 	for program in self.programs:
-		# 		if (program.process != None):
-		# 			program.process.killprocess = True
-		# log("TaskMaster exiting", "./tmlog.txt", False)
-		# exit(0)
 
 	def default(self, line):
 		'''Custom input handling'''
@@ -162,11 +139,8 @@ class Taskmaster(cmd.Cmd):
 			if (len(prog.processes) > 0):
 				for proc in prog.processes:
 					if (proc.active == False):
-					# if (proc.is_alive() == False):
-						# print(prog.processes)
 						prog.processes.remove(proc)
 						log("Removing " + proc.name, "./tmlog.txt", False)
-						# print(prog.processes)
 
 
 	def handleSigint(self, signum, frame):
@@ -198,6 +172,12 @@ def autolaunchPrograms(taskmaster):
 			+ " automatically",	"./tmlog.txt", True)
 	else:
 		log("No programs set to launch automatically", "./tmlog.txt", True)
+
+
+# def checkCommands(programs):
+# 	"""Check if the commands in config file are valid commands"""
+# 	for pth in os.environ["PATH"].split(os.pathsep):
+# 		print(pth)
 
 
 def main():
