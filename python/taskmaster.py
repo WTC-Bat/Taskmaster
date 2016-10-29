@@ -51,34 +51,8 @@ class Taskmaster(cmd.Cmd):
 
 	def default(self, line):
 		'''Custom input handling'''
-#------------------------------------------------------------------------------#
 		log("Input: '" + line + "'", "./tmlog.txt", False)
-		if (line == "cheese"):				###
-			print "Crackers"
-		# elif line == "load":				###
-		# 	self.programs = tmdata.loadConfig(os.path.realpath("./config.xml"))
-		# 	print("\n---Programs Loaded---\n")
-		elif line.startswith("monitor"):	###
-			if not self.programs:
-				print("Load config first!")
-				return
-			sc = line.split()
-			if len(sc) == 1:
-				for program in self.programs:
-					program.runAndMonitor()
-				print("\n---Monitoring " + str(len(self.programs))
-						+ " programs---\n")
-			else:
-				for program in self.programs:
-					if program.progname == sc[1]:
-						print("\n---Monitoring " + program.progname + " ---\n")
-						program.runAndMonitor()
-				#check if progname is in config and if not notify user!!!
-		elif line == "dlog":
-			os.remove("./tmlog.txt")
-			print("./tmlog.txt deleted!")
-#------------------------------------------------------------------------------#
-		elif (line.startswith("status")):
+		if (line.startswith("status")):
 			print("ALL STATUS")
 			splt = line.split()
 			if (len(splt) == 1):
@@ -91,8 +65,8 @@ class Taskmaster(cmd.Cmd):
 							stat = "Inactive"
 						print(prog.progname + ": " + proc.name + " - "
 								+ stat)
-			# log("Showing status ")	???
-			# 	showstatus()
+			elif (len(splt) > 1):
+				self.showStatus(splt)
 		elif (line.startswith("stop")):	#this if statement is only if programs require a specific SIGNAL to stop
 			splt = line.split()
 			if (len(splt) == 1):
@@ -103,11 +77,51 @@ class Taskmaster(cmd.Cmd):
 				self.stopPrograms(splt)
 				if (len(splt) == 2 and splt[1] == "all"):
 					self.stopAllPrograms()
-
 		elif (line.startswith("start")):
-			print("START")
+			splt = line.split()
+			if (len(splt) == 1):
+				for prog in self.programs:
+						#clearing processes seems to leave one behind
+						#this also creates additional processes that shouldn't be there
+					prog.clearInactiveProcesses()
+					num = 0
+					while num < prog.procnum:
+						prog.runAndMonitor()
+						num += 1
+					num = 0
+		# elif (line.startswith("restart")):
+			#running process need to be removed and restarted
+		elif (line == "clear"):
+			for prog in self.programs:
+				prog.clearInactiveProcesses()
+					# for proc in prog.processes:
+					# 	if (proc.is_alive() == False):
+					# 		proc.start()
 		else:
 			log("Unknown command: " + line, "./tmlog.txt", True)
+
+	def showStatus(self, args):
+		""""""
+		cnt = 0
+		found = False
+
+		while cnt < len(args):
+			if (cnt > 0):
+				for prog in self.programs:
+					if (prog.progname == args[cnt]):
+						found = True
+						for proc in prog.processes:
+							if (proc.active == True):
+								stat = "Active"
+							else:
+								stat = "Inactive"
+							print(prog.progname + ": " + proc.name + " - "
+									+ stat)
+				if (found == False):
+					log("Program '" + args[cnt] + "' not in config",
+						"./tmlog.txt", True)
+			cnt += 1
+			found = False
 
 
 	def stopAllPrograms(self):

@@ -43,7 +43,7 @@ class Process(threading.Thread):
 			log("Caught exception '" + str(e) + "'", "./tmlog.txt", False)
 			return
 
-		# self.stop = False
+		self.stop = False
 		self.active = True
 		self.monitor_timer()
 
@@ -77,12 +77,12 @@ class Process(threading.Thread):
 					self.stop = True
 					# log(self.name + " stopped", "./tmlog.txt", False)
 					# self.progd["processes"].remove(proc)
-					self.active = False
+					# self.active = False
 			else:
 				# tim.cancel()
 				self.stop = True
-				log(self.name + " stopped", "./tmlog.txt", False)
-				self.active = False
+				# log(self.name + " stopped", "./tmlog.txt", False)
+				# self.active = False
 				# self.writeStdOut()
 		# else:
 		# 	self.writeStdOut()

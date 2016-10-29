@@ -99,6 +99,12 @@ class Program():
 		""""""
 		return (str(self) == str(obj))
 
+	def clearInactiveProcesses(self):
+		""""""
+		for proc in self.processes:
+			if (proc.active == False):
+				self.processes.remove(proc)
+
 	def runAndMonitor(self):
 		""""""
 		proc = procc.Process(self.__dict__)
