@@ -58,7 +58,7 @@
 		<rederr>False</rederr>
 		<procnum>3</procnum>
 		<starttime>5</starttime>
-		<restart>never</restart>
+		<restart>always</restart>
 		<exitcodes>
 			<code>0</code>
 			<code>2</code>

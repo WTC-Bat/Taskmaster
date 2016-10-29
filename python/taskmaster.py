@@ -80,8 +80,17 @@ class Taskmaster(cmd.Cmd):
 #------------------------------------------------------------------------------#
 		elif (line.startswith("status")):
 			print("ALL STATUS")
-			# splt = line.split()
-			# if (len(splt) == 1):
+			splt = line.split()
+			if (len(splt) == 1):
+				for prog in self.programs:
+					for proc in prog.processes:
+						stat = ""
+						if (proc.active == True):
+							stat = "Active"
+						else:
+							stat = "Inactive"
+						print(prog.progname + ": " + proc.name + " - "
+								+ stat)
 			# log("Showing status ")	???
 			# 	showstatus()
 		elif (line.startswith("stop")):	#this if statement is only if programs require a specific SIGNAL to stop
@@ -111,7 +120,7 @@ class Taskmaster(cmd.Cmd):
 						signum = tmfuncs.getSignalValue(prog.stopsig)
 						proc.pop.send_signal(signum)
 						proc.stop = True
-				prog.processes = list()
+				# prog.processes = list()
 				# log("Program '" + prog.progname + "' stopped",
 				# 	"./tmlog.txt", True)
 
@@ -134,7 +143,7 @@ class Taskmaster(cmd.Cmd):
 								proc.stop = True
 						# log("Program '" + prog.progname + "' stopped",
 						# 	"./tmlog.txt", True)#
-						prog.processes = list()#
+						# prog.processes = list()#
 			cnt += 1
 
 	def monitorProcesses(self):
@@ -206,7 +215,7 @@ def main():
 	autolaunchPrograms(tm)
 	tm.monitor = True
 	log("Monitoring processes", "./tmlog.txt", False)
-	tm.monitorProcesses()
+	# tm.monitorProcesses()
 	signal.signal(signal.SIGINT, tm.handleSigint)#!#
 	tm.cmdloop()
 

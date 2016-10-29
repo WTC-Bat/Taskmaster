@@ -43,6 +43,7 @@ class Process(threading.Thread):
 			log("Caught exception '" + str(e) + "'", "./tmlog.txt", False)
 			return
 
+		# self.stop = False
 		self.active = True
 		self.monitor_timer()
 
@@ -63,7 +64,7 @@ class Process(threading.Thread):
 				log("Restarting '" + self.name + "'", "./tmlog.txt", False)
 			elif (self.progd["restart"] == "unexpected"):
 				if (self.expectedReturnCode() == False
-						and self.retries != self.progd["retries"]):
+						and self.retries != int(self.progd["retries"])):
 					self.retries += 1
 					log("'" + self.name + "' terminated unexpectedly",
 						"./tmlog.txt", False)
@@ -73,11 +74,13 @@ class Process(threading.Thread):
 					log("Retries: " + str(self.retries))
 				else:
 					# tim.cacel()
+					self.stop = True
 					# log(self.name + " stopped", "./tmlog.txt", False)
 					# self.progd["processes"].remove(proc)
 					self.active = False
 			else:
-				tim.cancel()
+				# tim.cancel()
+				self.stop = True
 				log(self.name + " stopped", "./tmlog.txt", False)
 				self.active = False
 				# self.writeStdOut()
