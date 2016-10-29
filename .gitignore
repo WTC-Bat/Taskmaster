@@ -4,3 +4,5 @@
 Member Overview.docx
 RoughTMScrib.py
 tmlog.txt
+*.stderr
+*.stdout

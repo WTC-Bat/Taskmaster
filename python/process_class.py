@@ -1,3 +1,4 @@
+import os
 import time
 import threading
 import subprocess
@@ -8,18 +9,20 @@ class Process(threading.Thread):
 	""""""
 	def __init__(self, progdict):
 		threading.Thread.__init__(self)
-		self.stdout = None
-		self.stderr = None
 		self.pop = None
 		self.progd = progdict
+		self.stdout = None
+		self.stderr = None
 		self.tmexit = False
-		self.name = "Thread-" + self.progd["progname"]
+		self.name = self.threadName()
 		self.active = False
 		self.retries = 0
 		log("Process '" + self.name + "' initialized", "./tmlog.txt", False)
 
 	def run(self):
-		""""""
+		"""
+		threading.Thread.run() override. Invoked via threading.Thread.Start()
+		"""
 		args = self.progd["command"].split()	# or shlex.split()
 		try:
 			self.pop = subprocess.Popen(args, stderr=subprocess.PIPE,
@@ -30,10 +33,23 @@ class Process(threading.Thread):
 			log("Caught exception '" + str(e) + "'", "./tmlog.txt", False)
 			return
 
+		# if (self.progd["redout"] == True):
+		# 	print("REDIRECT STDOUT")
+		# if (self.progd["rederr"] == True):
+		# 	print("REDIRECT STDERR")
+
+		# if (self.progd["redout"] == True or self.progd["rederr"] == True):
+		# 	self.stdout, self.stderr = self.pop.communicate()
+		# 	if (self.progd["redout"] == True):
+		# 		self.writeStdOut()
+		# 	if (self.progd["rederr"] == True):
+		# 		self.writeStdErr()
+
 		self.active = True
 		self.monitor_timer()
 
 	def monitor_timer(self):
+		"""Monitor the state of this process every second"""
 		tim = threading.Timer(1.0, self.monitor_timer)
 		tim.start()
 		self.pop.poll()
@@ -64,10 +80,59 @@ class Process(threading.Thread):
 			else:
 				log(self.name + " stopped", "./tmlog.txt", False)
 				self.active = False
+		# else:
+		# 	self.writeStdOut()
 
 	def expectedReturnCode(self):
-		"""Returns true if the return code from popen.poll() is """
+		"""
+		Returns true if the return code from popen.poll() is an expected value
+		"""
 		for rcode in self.progd["exitcodes"]:
 			if (rcode == self.pop.returncode):
 				return (True)
 		return (False)
+
+	def threadName(self):
+		"""Return a number for multiple processes of the same program"""
+		idx = len(self.progd["processes"]) + 1
+		tname = "Thread-" + self.progd["progname"] + "-" + str(idx)
+
+		return (tname)
+
+
+	def writeStdErr(self):
+		"""
+		Writes the processes standard error to the file specified in the
+		program's 'stderr' element in the config file
+		"""
+		splt = ""
+		outpath = ""
+
+		if not (self.progd["stderr"]):
+			outpath = "./" + self.progd["progname"] + ".stderr"
+		splt = self.progd["stderr"].split(os.path.sep)
+		if (len(splt) == 1):
+			outpath = "./" + self.progd["stderr"]
+		else:
+			outpath = self.progd["stderr"]
+		with open(outpath, "w") as out:	#with open(outpath, "a") as out:
+			out.write(self.stderr)
+
+	def writeStdOut(self):
+		"""
+		Writes the processes standard output to the file specified in the
+		program's 'stdout' element in the config file
+		"""
+		splt = ""
+		outpath = ""
+
+		if not (self.progd["stdout"]):
+			outpath = "./" + self.progd["progname"] + ".stdout"
+		splt = self.progd["stdout"].split(os.path.sep)
+		if (len(splt) == 1):
+			outpath = "./" + self.progd["stdout"]
+		else:
+			outpath = self.progd["stdout"]
+		with open(outpath, "w") as out:	#with open(outpath, "a") as out:
+			# out.write(self.stdout)
+			out.write(self.pop.stdout.read())
