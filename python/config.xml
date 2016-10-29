@@ -47,7 +47,7 @@
 		<retries>2</retries>
 		<redout>False</redout>
 		<stdout>top.stdout</stdout>
-		<workingdir>/tmp</workingdir>
+		<workingdir></workingdir>
 		<umask>077</umask>
 		<progname>top</progname>
 		<stopsig>SIGKILL</stopsig>

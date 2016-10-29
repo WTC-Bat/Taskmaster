@@ -104,11 +104,16 @@ class Taskmaster(cmd.Cmd):
 	def stopAllPrograms(self):
 		"""Stop all programs"""
 		for prog in self.programs:
+			# if (len(prog.processes) > 0):
 			for proc in prog.processes:
-				signum = tmfuncs.getSignalValue(prog.stopsig)
-				proc.pop.send_signal(signum)
-				proc.tmexit = True
+				# if (proc.is_alive()):	#?
+				if (proc.active == True):	#?
+					signum = tmfuncs.getSignalValue(prog.stopsig)
+					proc.pop.send_signal(signum)
+					proc.tmexit = True
 			prog.processes = list()
+			# log("Program '" + prog.progname + "' stopped",
+			# 	"./tmlog.txt", True)
 
 
 	def stopPrograms(self, args):	#make a version where you can stop specific processes
@@ -122,10 +127,14 @@ class Taskmaster(cmd.Cmd):
 				for prog in self.programs:
 					if (prog.progname == args[cnt]):
 						for proc in prog.processes:
-							signum = tmfuncs.getSignalValue(prog.stopsig)
-							proc.pop.send_signal(signum)
-							proc.tmexit = True
-						prog.processes = list()
+							# if (proc.is_alive()):	#?
+							if (proc.active == True):	#?
+								signum = tmfuncs.getSignalValue(prog.stopsig)
+								proc.pop.send_signal(signum)
+								proc.tmexit = True
+						# log("Program '" + prog.progname + "' stopped",
+						# 	"./tmlog.txt", True)#
+						prog.processes = list()#
 			cnt += 1
 
 	def monitorProcesses(self):
@@ -139,7 +148,7 @@ class Taskmaster(cmd.Cmd):
 			if (len(prog.processes) > 0):
 				for proc in prog.processes:
 					if (proc.active == False):
-						prog.processes.remove(proc)
+						prog.processes.remove(proc)		#Remove it?
 						log("Removing " + proc.name, "./tmlog.txt", False)
 
 

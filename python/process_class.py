@@ -24,9 +24,21 @@ class Process(threading.Thread):
 		threading.Thread.run() override. Invoked via threading.Thread.Start()
 		"""
 		args = self.progd["command"].split()	# or shlex.split()
+		# wkdir = ""
+		wkdir = None
+		envs = None
+
+		if (self.progd["workingdir"]):
+			wkdir = self.progd["workingdir"]
+		else:
+			wkdir = "./" + self.name + "/"
+		if (len(self.progd["envvars"]) > 0):
+			envs = self.progd["envvars"]
 		try:
-			self.pop = subprocess.Popen(args, stderr=subprocess.PIPE,
-										stdout=subprocess.PIPE)
+			# self.pop = subprocess.Popen(args, stderr=subprocess.PIPE,
+			# 							stdout=subprocess.PIPE)
+			self.pop = subprocess.Popen(args, cwd=wkdir, stderr=subprocess.PIPE,
+										stdout=subprocess.PIPE, env=envs)
 		except (ValueError, OSError) as e:
 			# print("Invalid arguments given to 'subprocess.Popen'")
 			# print("Program Name: " + self.progd["progname"])
