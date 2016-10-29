@@ -104,16 +104,16 @@ class Taskmaster(cmd.Cmd):
 	def stopAllPrograms(self):
 		"""Stop all programs"""
 		for prog in self.programs:
-			# if (len(prog.processes) > 0):
-			for proc in prog.processes:
-				# if (proc.is_alive()):	#?
-				if (proc.active == True):	#?
-					signum = tmfuncs.getSignalValue(prog.stopsig)
-					proc.pop.send_signal(signum)
-					proc.tmexit = True
-			prog.processes = list()
-			# log("Program '" + prog.progname + "' stopped",
-			# 	"./tmlog.txt", True)
+			if (len(prog.processes) > 0):
+				for proc in prog.processes:
+					# if (proc.is_alive()):	#?
+					if (proc.active == True):	#?
+						signum = tmfuncs.getSignalValue(prog.stopsig)
+						proc.pop.send_signal(signum)
+						proc.stop = True
+				prog.processes = list()
+				# log("Program '" + prog.progname + "' stopped",
+				# 	"./tmlog.txt", True)
 
 
 	def stopPrograms(self, args):	#make a version where you can stop specific processes
@@ -131,7 +131,7 @@ class Taskmaster(cmd.Cmd):
 							if (proc.active == True):	#?
 								signum = tmfuncs.getSignalValue(prog.stopsig)
 								proc.pop.send_signal(signum)
-								proc.tmexit = True
+								proc.stop = True
 						# log("Program '" + prog.progname + "' stopped",
 						# 	"./tmlog.txt", True)#
 						prog.processes = list()#

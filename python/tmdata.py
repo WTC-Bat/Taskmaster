@@ -104,9 +104,21 @@ def programFromElement(progel):
 		elif el.tag == "stderr":
 			prog.stderr = el.text
 		elif el.tag == "redout":
-			prog.redout = el.text
+			if (el.text == "True"):
+				prog.redout = True
+			else:
+				prog.redout = False
+			# prog.redout = bool(el.text)
 		elif el.tag == "rederr":
-			prog.rederr = el.text
+			if (el.text == "True"):
+				prog.rederr = True
+			else:
+				prog.rederr = False
+			# prog.rederr = bool(el.text)
+		# elif el.tag == "redout":
+		# 	prog.redout = el.text
+		# elif el.tag == "rederr":
+		# 	prog.rederr = el.text
 		elif el.tag == "envvars":
 			var = None
 			val = None
@@ -122,6 +134,8 @@ def programFromElement(progel):
 			prog.workingdir = el.text
 		elif el.tag == "umask":
 			prog.umask = el.text
+	# print("redout - " + prog.progname + " - " + str(prog.redout))
+	# print("rederr - " + prog.progname + " - " + str(prog.rederr))
 	return (prog)
 
 

@@ -13,7 +13,7 @@ class Process(threading.Thread):
 		self.progd = progdict
 		self.stdout = None
 		self.stderr = None
-		self.tmexit = False
+		self.stop = False
 		self.name = self.threadName()
 		self.active = False
 		self.retries = 0
@@ -30,8 +30,6 @@ class Process(threading.Thread):
 
 		if (self.progd["workingdir"]):
 			wkdir = self.progd["workingdir"]
-		else:
-			wkdir = "./" + self.name + "/"
 		if (len(self.progd["envvars"]) > 0):
 			envs = self.progd["envvars"]
 		try:
@@ -45,18 +43,6 @@ class Process(threading.Thread):
 			log("Caught exception '" + str(e) + "'", "./tmlog.txt", False)
 			return
 
-		# if (self.progd["redout"] == True):
-		# 	print("REDIRECT STDOUT")
-		# if (self.progd["rederr"] == True):
-		# 	print("REDIRECT STDERR")
-
-		# if (self.progd["redout"] == True or self.progd["rederr"] == True):
-		# 	self.stdout, self.stderr = self.pop.communicate()
-		# 	if (self.progd["redout"] == True):
-		# 		self.writeStdOut()
-		# 	if (self.progd["rederr"] == True):
-		# 		self.writeStdErr()
-
 		self.active = True
 		self.monitor_timer()
 
@@ -65,15 +51,13 @@ class Process(threading.Thread):
 		tim = threading.Timer(1.0, self.monitor_timer)
 		tim.start()
 		self.pop.poll()
-		if (self.tmexit == True):
+		if (self.stop == True):
 			tim.cancel()
-			if (self.is_alive()):
-				self.pop.send_signal(tmfuncs.getSignalValue(self.progd["stopsig"]))
 			log("Terminating '" + self.name + "'", "./tmlog.txt", False)
 			self.active = False
 			return
 		if (self.pop.returncode != None):
-			tim.cancel()
+			self.stop = True
 			if (self.progd["restart"] == "always"):
 				self.run()
 				log("Restarting '" + self.name + "'", "./tmlog.txt", False)
@@ -88,12 +72,23 @@ class Process(threading.Thread):
 						"./tmlog.txt", False)
 					log("Retries: " + str(self.retries))
 				else:
+					# tim.cacel()
+					# log(self.name + " stopped", "./tmlog.txt", False)
+					# self.progd["processes"].remove(proc)
 					self.active = False
 			else:
+				tim.cancel()
 				log(self.name + " stopped", "./tmlog.txt", False)
 				self.active = False
+				# self.writeStdOut()
 		# else:
 		# 	self.writeStdOut()
+		# if (self.progd["redout"] == True):
+		# 	self.stdout = self.pop.stdout.read()
+		# 	self.writeStdOut()
+			# print("REDIRECT STDOUT")
+		# if (self.progd["rederr"] == True):
+			# print("REDIRECT STDERR")
 
 	def expectedReturnCode(self):
 		"""
@@ -138,6 +133,7 @@ class Process(threading.Thread):
 		splt = ""
 		outpath = ""
 
+		print("Write: " + self.name) #
 		if not (self.progd["stdout"]):
 			outpath = "./" + self.progd["progname"] + ".stdout"
 		splt = self.progd["stdout"].split(os.path.sep)
@@ -147,4 +143,5 @@ class Process(threading.Thread):
 			outpath = self.progd["stdout"]
 		with open(outpath, "w") as out:	#with open(outpath, "a") as out:
 			# out.write(self.stdout)
+			# out.write(self.pop.stdout.readline())
 			out.write(self.pop.stdout.read())

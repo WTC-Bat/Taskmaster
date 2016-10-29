@@ -45,7 +45,7 @@
 			</envvar>
 		</envvars>
 		<retries>2</retries>
-		<redout>False</redout>
+		<redout>True</redout>
 		<stdout>top.stdout</stdout>
 		<workingdir></workingdir>
 		<umask>077</umask>

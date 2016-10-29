@@ -32,6 +32,7 @@ class Program():
 		self.redout = False
 		self.rederr = False
 		self.processes = list()
+		self.tmexit = False
 
 		# print("UMASK: " + format(self.umask, "03o"))
 
@@ -67,6 +68,10 @@ class Program():
 					self.redout = val
 				elif key == "rederr":
 					self.rederr = val
+				# elif key == "redout":
+				# 	self.redout = bool(val)
+				# elif key == "rederr":
+				# 	self.rederr = bool(val)
 				elif type(val) is dict and key == "envvars":
 					self.envvars = dict();
 					for k, v in val.iteritems():
