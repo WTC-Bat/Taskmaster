@@ -17,7 +17,6 @@ class Process(threading.Thread):
 		self.name = self.threadName()
 		self.active = False
 		self.retries = 0
-		log("Process '" + self.name + "' initialized", "./tmlog.txt", False)
 
 	def run(self):
 		"""
@@ -27,6 +26,7 @@ class Process(threading.Thread):
 		wkdir = None
 		envs = None
 
+		log("Starting process '" + self.name + "'", "./tmlog.txt", False)
 		if (self.progd["workingdir"]):
 			wkdir = self.progd["workingdir"]
 		if (len(self.progd["envvars"]) > 0):
@@ -36,6 +36,9 @@ class Process(threading.Thread):
 			# 							stdout=subprocess.PIPE)
 			self.pop = subprocess.Popen(args, cwd=wkdir, stderr=subprocess.PIPE,
 										stdout=subprocess.PIPE, env=envs)
+			# self.pop = subprocess.Popen(args, cwd=wkdir, stderr=subprocess.PIPE,
+			# 							stdout=subprocess.PIPE, env=envs,
+			# 							preexec_fn=self.initializeProcess)
 		except (ValueError, OSError) as e:
 			# print("Invalid arguments given to 'subprocess.Popen'")
 			# print("Program Name: " + self.progd["progname"])
@@ -53,12 +56,9 @@ class Process(threading.Thread):
 		self.pop.poll()
 		if (self.stop == True):
 			# signum = tmfuncs.getSignalValue(self.progd["stopsig"])
-
 			tim.cancel()
-			log("Terminating '" + self.name + "'", "./tmlog.txt", False)
-
+			log("Stopping process '" + self.name + "'", "./tmlog.txt", False)
 			# self.pop.send_signal(signum)
-
 			self.active = False
 			return
 		if (self.pop.returncode != None):
@@ -90,9 +90,9 @@ class Process(threading.Thread):
 				return (True)
 		return (False)
 
-	def initializeProcess():
+	def initializeProcess(self):
 		""""""
-		# os.setpgrp()
+		os.setpgrp()
 		os.umask(format(self.progd["umask"], "03o"))
 
 	def threadName(self):

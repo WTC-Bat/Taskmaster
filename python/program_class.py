@@ -96,11 +96,11 @@ class Program():
 		""""""
 		return (str(self) == str(obj))
 
-	def clearInactiveProcesses(self):
-		""""""
-		for proc in self.processes:
-			if (proc.active == False):
-				self.processes.remove(proc)
+	# def clearInactiveProcesses(self):
+	# 	""""""
+	# 	for proc in self.processes:
+	# 		if (proc.active == False):
+	# 			self.processes.remove(proc)
 
 	# def removeProcess(process):
 	# 	""""""
