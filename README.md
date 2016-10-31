@@ -6,10 +6,11 @@
 
 # Exit problems (Tied to below?)
 
-# Sometimes, it seems, when trying to stop a process, the kill signal is
-#	sent at a point during monitoring when the process hasn't started but
-#	'active' is True. Setting the timer interval in "process_class.py" to
-#	0.1 may give help as it is more accurate than 1.0 (every seßcond)
+Sometimes, it seems, when trying to stop a process, the kill signal is
+	sent at a point during monitoring when the process hasn't started but
+	'active' is True. Setting the timer interval in "process_class.py" to
+	0.1 may give help as it is more accurate than 1.0 (every second)
+	Maybe removing/cleaning Process.pop (Popen) object will help
 
 ### TODO:
 	- Logging
