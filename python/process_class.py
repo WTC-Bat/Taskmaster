@@ -24,7 +24,6 @@ class Process(threading.Thread):
 		threading.Thread.run() override. Invoked via threading.Thread.Start()
 		"""
 		args = self.progd["command"].split()	# or shlex.split()
-		# wkdir = ""
 		wkdir = None
 		envs = None
 
@@ -101,6 +100,11 @@ class Process(threading.Thread):
 			if (rcode == self.pop.returncode):
 				return (True)
 		return (False)
+
+	def initializeProcess():
+		""""""
+		# os.setpgrp()
+		os.umask(format(self.progd["umask"], "03o")
 
 	def threadName(self):
 		"""Return a number for multiple processes of the same program"""

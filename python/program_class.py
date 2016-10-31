@@ -1,4 +1,3 @@
-# import array
 import subprocess
 import shlex
 import os
@@ -33,8 +32,6 @@ class Program():
 		self.rederr = False
 		self.processes = list()
 		self.tmexit = False
-
-		# print("UMASK: " + format(self.umask, "03o"))
 
 		if type(args) is dict:
 			for key, val in args.iteritems():
