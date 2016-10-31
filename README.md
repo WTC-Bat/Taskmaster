@@ -4,6 +4,7 @@
 
 # Problem with programs that run once and quit
 # Exit problems
+# Problem with stop/start/status loops (found = False)
 
 ### TODO:
 	- Logging

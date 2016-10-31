@@ -102,6 +102,10 @@ class Program():
 			if (proc.active == False):
 				self.processes.remove(proc)
 
+	# def removeProcess(process):
+	# 	""""""
+	# 	self.processes.remove(process)
+
 	def runAndMonitor(self):
 		""""""
 		proc = procc.Process(self.__dict__)

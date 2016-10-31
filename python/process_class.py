@@ -52,8 +52,13 @@ class Process(threading.Thread):
 		tim.start()
 		self.pop.poll()
 		if (self.stop == True):
+			# signum = tmfuncs.getSignalValue(self.progd["stopsig"])
+
 			tim.cancel()
 			log("Terminating '" + self.name + "'", "./tmlog.txt", False)
+
+			# self.pop.send_signal(signum)
+
 			self.active = False
 			return
 		if (self.pop.returncode != None):
@@ -72,25 +77,9 @@ class Process(threading.Thread):
 						"./tmlog.txt", False)
 					log("Retries: " + str(self.retries))
 				else:
-					# tim.cacel()
 					self.stop = True
-					# log(self.name + " stopped", "./tmlog.txt", False)
-					# self.progd["processes"].remove(proc)
-					# self.active = False
 			else:
-				# tim.cancel()
 				self.stop = True
-				# log(self.name + " stopped", "./tmlog.txt", False)
-				# self.active = False
-				# self.writeStdOut()
-		# else:
-		# 	self.writeStdOut()
-		# if (self.progd["redout"] == True):
-		# 	self.stdout = self.pop.stdout.read()
-		# 	self.writeStdOut()
-			# print("REDIRECT STDOUT")
-		# if (self.progd["rederr"] == True):
-			# print("REDIRECT STDERR")
 
 	def expectedReturnCode(self):
 		"""

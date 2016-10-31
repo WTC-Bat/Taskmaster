@@ -50,7 +50,7 @@
 		<workingdir></workingdir>
 		<umask>077</umask>
 		<progname>top</progname>
-		<stopsig>SIGKILL</stopsig>
+		<stopsig>SIGTERM</stopsig>
 		<autolaunch>True</autolaunch>
 		<stoptime>10</stoptime>
 		<command>/usr/bin/top</command>
@@ -58,7 +58,7 @@
 		<rederr>False</rederr>
 		<procnum>3</procnum>
 		<starttime>5</starttime>
-		<restart>always</restart>
+		<restart>never</restart>
 		<exitcodes>
 			<code>0</code>
 			<code>2</code>

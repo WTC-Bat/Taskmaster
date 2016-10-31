@@ -45,7 +45,8 @@ class Taskmaster(cmd.Cmd):
 		'''Exits the Taskmaster shell when user inputs "exit"'''
 		self.monitor = False
 		if (len(self.programs) > 0):
-			self.stopAllPrograms()
+			# self.stopAllPrograms()
+			self.stopPrograms(["stop", "all"])
 		log("TaskMaster exiting", "./tmlog.txt", False)
 		exit(0)
 
@@ -53,112 +54,175 @@ class Taskmaster(cmd.Cmd):
 		'''Custom input handling'''
 		log("Input: '" + line + "'", "./tmlog.txt", False)
 		if (line.startswith("status")):
-			print("ALL STATUS")
-			splt = line.split()
-			if (len(splt) == 1):
-				for prog in self.programs:
+			self.showStatus(line.split())
+		elif (line.startswith("stop")):	#this if statement is only if programs require a specific SIGNAL to stop
+			self.stopPrograms(line.split())
+		elif (line.startswith("start")):
+			self.startPrograms(line.split())
+		elif (line.startswith("restart")):
+			self.restartPrograms(line.split())
+		elif (line == "clear"):	#tmp
+			for prog in self.programs:
+				prog.clearInactiveProcesses()
+		else:
+			log("Unknown command: " + line, "./tmlog.txt", True)
+
+	def restartPrograms(self, args):
+		""""""
+		cnt = 1
+
+	def showStatus(self, args):
+		""""""
+		cnt = 1
+		found = False
+		stat = ""
+
+		if (len(args) == 1):
+			for prog in self.programs:
+				if (len(prog.processes) > 0):
 					for proc in prog.processes:
-						stat = ""
 						if (proc.active == True):
 							stat = "Active"
 						else:
 							stat = "Inactive"
-						print(prog.progname + ": " + proc.name + " - "
-								+ stat)
-			elif (len(splt) > 1):
-				self.showStatus(splt)
-		elif (line.startswith("stop")):	#this if statement is only if programs require a specific SIGNAL to stop
-			splt = line.split()
-			if (len(splt) == 1):
-				print ("Please specify which program\s to stop "
-						+ "(stop all -OR- stop [program1 name] "
-						+ "[program2 name])")
-			elif (len(splt) > 1):
-				self.stopPrograms(splt)
-				if (len(splt) == 2 and splt[1] == "all"):
-					self.stopAllPrograms()
-		elif (line.startswith("start")):
-			splt = line.split()
-			if (len(splt) == 1):
+						print(prog.progname + ": " + proc.name + " - " + stat)
+		elif (len(args) > 1):
+			while cnt < len(args):
 				for prog in self.programs:
-						#clearing processes seems to leave one behind
-						#this also creates additional processes that shouldn't be there
-					prog.clearInactiveProcesses()
-					num = 0
-					while num < prog.procnum:
-						prog.runAndMonitor()
-						num += 1
-					num = 0
-		# elif (line.startswith("restart")):
-			#running process need to be removed and restarted
-		elif (line == "clear"):
-			for prog in self.programs:
-				prog.clearInactiveProcesses()
-					# for proc in prog.processes:
-					# 	if (proc.is_alive() == False):
-					# 		proc.start()
-		else:
-			log("Unknown command: " + line, "./tmlog.txt", True)
+					if (prog.progname == args[cnt]):
+						found = True
+						if (len(prog.processes) > 0):
+							for proc in prog.processes:
+								if (proc.active == True):
+									stat = "Active"
+								else:
+									stat = "Inactive"
+								print(prog.progname + ": " + proc.name + " - "
+										+ stat)
+					if (found == False):
+						log("Program '" + args[cnt] + "' not in config",
+							"./tmlog.txt", True)
+				found = False
+				cnt += 1
 
-	def showStatus(self, args):
+	# def showStatus(self, args):
+	# 	""""""
+	# 	cnt = 0
+	# 	found = False
+	#
+	# 	while cnt < len(args):
+	# 		if (cnt > 0):
+	# 			for prog in self.programs:
+	# 				if (prog.progname == args[cnt]):
+	# 					found = True
+	# 					for proc in prog.processes:
+	# 						if (proc.active == True):
+	# 							stat = "Active"
+	# 						else:
+	# 							stat = "Inactive"
+	# 						print(prog.progname + ": " + proc.name + " - "
+	# 								+ stat)
+	# 			if (found == False):
+	# 				log("Program '" + args[cnt] + "' not in config",
+	# 					"./tmlog.txt", True)
+	# 		cnt += 1
+	# 		found = False
+
+	def startPrograms(self, args):
 		""""""
-		cnt = 0
+		cnt = 1
 		found = False
 
-		while cnt < len(args):
-			if (cnt > 0):
+		if (len(args) == 1):
+			for prog in self.programs:
+				if (len(prog.processes) > 0):
+					for proc in prog.processes:
+						if (proc.active == False):
+							proc.start()
+		elif (len(args) > 1):
+			while cnt < len(args):
 				for prog in self.programs:
 					if (prog.progname == args[cnt]):
 						found = True
 						for proc in prog.processes:
-							if (proc.active == True):
-								stat = "Active"
-							else:
-								stat = "Inactive"
-							print(prog.progname + ": " + proc.name + " - "
-									+ stat)
-				if (found == False):
-					log("Program '" + args[cnt] + "' not in config",
-						"./tmlog.txt", True)
-			cnt += 1
-			found = False
+							if (proc.active == False):
+								proc.start()
+					if (found == False):
+						log("Program '" + args[cnt] + "' not in config",
+							"./tmlog.txt", True)
+				found = False
+				cnt += 1
 
 
-	def stopAllPrograms(self):
-		"""Stop all programs"""
-		for prog in self.programs:
-			if (len(prog.processes) > 0):
-				for proc in prog.processes:
+	# def stopAllPrograms(self):
+	# 	"""Stop all programs"""
+	# 	for prog in self.programs:
+	# 		if (len(prog.processes) > 0):
+	# 			for proc in prog.processes:
 					# if (proc.is_alive()):	#?
-					if (proc.active == True):	#?
-						signum = tmfuncs.getSignalValue(prog.stopsig)
-						proc.pop.send_signal(signum)
-						proc.stop = True
+					# if (proc.active == True):	#?
+					# 	signum = tmfuncs.getSignalValue(prog.stopsig)
+					# 	proc.pop.send_signal(signum)
+					# 	proc.stop = True
 				# prog.processes = list()
 				# log("Program '" + prog.progname + "' stopped",
 				# 	"./tmlog.txt", True)
 
+	# def stopPrograms(self, args):	#make a version where you can stop specific processes
+	# 	"""Stop one or more programs.
+	# 	   args -> a split of 'stop prog1 prog2 etc'
+	# 	"""
+	# 	cnt = 0
+	#
+	# 	while cnt < len(args):
+	# 		if (cnt > 0):
+	# 			for prog in self.programs:
+	# 				if (prog.progname == args[cnt]):
+	# 					for proc in prog.processes:
+	# 						# if (proc.is_alive()):	#?
+	# 						if (proc.active == True):	#?
+	# 							signum = tmfuncs.getSignalValue(prog.stopsig)
+	# 							proc.pop.send_signal(signum)
+	# 							proc.stop = True
+	# 					# log("Program '" + prog.progname + "' stopped",
+	# 					# 	"./tmlog.txt", True)#
+	# 					# prog.processes = list()#
+	# 		cnt += 1
 
-	def stopPrograms(self, args):	#make a version where you can stop specific processes
-		"""Stop one or more programs.
-		   args -> a split of 'stop prog1 prog2 etc'
-		"""
-		cnt = 0
+	def stopPrograms(self, args):
+		""""""
+		cnt = 1
+		found = False
 
-		while cnt < len(args):
-			if (cnt > 0):
+		if (len(args) == 1):
+			print ("Please specify which program\s to stop "
+					+ "(stop all -OR- stop [program1 name] "
+					+ "[program2 name])")
+		elif (len(args) > 1):
+			if (args[1] == "all"):
 				for prog in self.programs:
-					if (prog.progname == args[cnt]):
+					if (len(prog.processes) > 0):
 						for proc in prog.processes:
-							# if (proc.is_alive()):	#?
-							if (proc.active == True):	#?
+							if (proc.active == True):
+								proc.stop = True
 								signum = tmfuncs.getSignalValue(prog.stopsig)
 								proc.pop.send_signal(signum)
-								proc.stop = True
-						# log("Program '" + prog.progname + "' stopped",
-						# 	"./tmlog.txt", True)#
-						# prog.processes = list()#
-			cnt += 1
+			else:
+				while cnt < len(args):
+					for prog in self.programs:
+						if (prog.progname == args[cnt]):
+							found = True
+							if (len(prog.processes) > 0):
+								for proc in prog.processes:
+									if (proc.active == True):
+										proc.stop = True
+										signum = tmfuncs.getSignalValue(prog.stopsig)
+										proc.pop.send_signal(signum)
+						if (found == False):
+							log("Program '" + args[cnt] + "' not in config",
+								"./tmlog.txt", True)
+					found = False
+					cnt += 1
 
 	def monitorProcesses(self):
 		""""""
