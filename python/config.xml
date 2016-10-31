@@ -48,7 +48,7 @@
 		<redout>True</redout>
 		<stdout>top.stdout</stdout>
 		<workingdir></workingdir>
-		<umask>077</umask>
+		<umask>022</umask>
 		<progname>top</progname>
 		<stopsig>SIGTERM</stopsig>
 		<autolaunch>True</autolaunch>

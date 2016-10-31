@@ -34,11 +34,11 @@ class Process(threading.Thread):
 		try:
 			# self.pop = subprocess.Popen(args, stderr=subprocess.PIPE,
 			# 							stdout=subprocess.PIPE)
-			self.pop = subprocess.Popen(args, cwd=wkdir, stderr=subprocess.PIPE,
-										stdout=subprocess.PIPE, env=envs)
 			# self.pop = subprocess.Popen(args, cwd=wkdir, stderr=subprocess.PIPE,
-			# 							stdout=subprocess.PIPE, env=envs,
-			# 							preexec_fn=self.initializeProcess)
+			# 							stdout=subprocess.PIPE, env=envs)
+			self.pop = subprocess.Popen(args, cwd=wkdir, stderr=subprocess.PIPE,
+										stdout=subprocess.PIPE, env=envs,
+										preexec_fn=self.initializeProcess)
 		except (ValueError, OSError) as e:
 			# print("Invalid arguments given to 'subprocess.Popen'")
 			# print("Program Name: " + self.progd["progname"])
@@ -52,6 +52,7 @@ class Process(threading.Thread):
 	def monitor_timer(self):
 		"""Monitor the state of this process every second"""
 		tim = threading.Timer(1.0, self.monitor_timer)
+		# tim = threading.Timer(0.1, self.monitor_timer)
 		tim.start()
 		self.pop.poll()
 		if (self.stop == True):
@@ -93,7 +94,9 @@ class Process(threading.Thread):
 	def initializeProcess(self):
 		""""""
 		os.setpgrp()
-		os.umask(format(self.progd["umask"], "03o"))
+		# os.umask(format(self.progd["umask"], "03o"))
+		# os.umask(077)
+		os.umask(int(self.progd["umask"]))
 
 	def threadName(self):
 		"""Return a number for multiple processes of the same program"""

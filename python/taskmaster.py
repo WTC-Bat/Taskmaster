@@ -77,7 +77,8 @@ class Taskmaster(cmd.Cmd):
 			for prog in self.programs:
 				if (len(prog.processes) > 0):
 					for proc in prog.processes:
-						if (proc.active == True):
+						# if (proc.active == True):
+						if (proc.active == True and proc.pop):
 							# log("Restarting " + proc.name + "...",
 							# 	"./tmlog.txt", False)
 							proc.stop = True;
@@ -92,7 +93,8 @@ class Taskmaster(cmd.Cmd):
 						found = True
 						if (len(prog.processes) > 0):
 							for proc in prog.processes:
-								if (proc.active == True):
+								# if (proc.active == True):
+								if (proc.active == True and proc.pop):
 									proc.stop = True
 									signum = tmfuncs.getSignalValue(prog.stopsig)
 									proc.pop.send_signal(signum)
@@ -189,6 +191,7 @@ class Taskmaster(cmd.Cmd):
 						for proc in prog.processes:
 							# if (proc.active == True):
 							if (proc.active == True and proc.pop):
+							# if (proc.active == True and proc.pop.pid):
 							# if (proc.active == True and proc.isAlive()):
 								proc.stop = True
 								signum = tmfuncs.getSignalValue(prog.stopsig)
@@ -202,6 +205,7 @@ class Taskmaster(cmd.Cmd):
 								for proc in prog.processes:
 									# if (proc.active == True):
 									if (proc.active == True and proc.pop):
+									# if (proc.active == True and proc.pop.pid):
 									# if (proc.active == True and proc.isAlive()):
 										proc.stop = True
 										signum = tmfuncs.getSignalValue(
