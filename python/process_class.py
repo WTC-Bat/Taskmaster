@@ -104,7 +104,7 @@ class Process(threading.Thread):
 	def initializeProcess():
 		""""""
 		# os.setpgrp()
-		os.umask(format(self.progd["umask"], "03o")
+		os.umask(format(self.progd["umask"], "03o"))
 
 	def threadName(self):
 		"""Return a number for multiple processes of the same program"""
