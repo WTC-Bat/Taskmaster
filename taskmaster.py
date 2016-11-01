@@ -263,11 +263,19 @@ def autolaunchPrograms(taskmaster):
 		log("No programs set to launch automatically", "./tmlog.txt", True)
 
 
+def clearLog():
+	""""""
+	if (os.path.getsize("./tmlog.txt") > 0):
+		log = open("./tmlog.txt", "w")
+		log.close()
+
+
 def main():
 	""""""
-	log("TaskMaster started", "./tmlog.txt", False)
 	tm = Taskmaster()
 
+	clearLog()
+	log("TaskMaster started", "./tmlog.txt", False)
 	print("Loading programs")
 	if str(platform.system()) != "Windows":
 		os.system("clear")

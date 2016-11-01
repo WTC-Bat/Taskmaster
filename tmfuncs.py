@@ -25,3 +25,7 @@ def isExecutable(filepath):
 	if (os.path.isfile(filepath) and os.access(filepath, os.X_OK)):
 		return (True)
 	return (False)
+
+# def testFileSize(file):
+# 	""""""
+# 	return ()

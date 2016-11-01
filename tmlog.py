@@ -8,7 +8,18 @@ def log(message, logfile, toprint):
 	"""
 	path = os.path.join(os.path.dirname(__file__), logfile)
 	txt = time.ctime() + "\t" + message
-	with open(path, "a") as log:
-		log.write(txt + "\n")
+	if (os.path.getsize(path) >= 2000000):
+		log = open(path, "w")
+	else:
+		log = open(path, "a")
+	log.write(txt + "\n")
+	log.close()
 	if (toprint == True):
 		print(message)
+
+	# path = os.path.join(os.path.dirname(__file__), logfile)
+	# txt = time.ctime() + "\t" + message
+	# with open(path, "a") as log:
+	# 	log.write(txt + "\n")
+	# if (toprint == True):
+	# 	print(message)

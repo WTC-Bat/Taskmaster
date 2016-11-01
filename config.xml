@@ -66,4 +66,34 @@
 			<code>5</code>
 		</exitcodes>
 	</Program>
+	<Program>
+		<envvars>
+			<envvar>
+				<var>ENV2</var>
+				<val>VAL2</val>
+			</envvar>
+			<envvar>
+				<var>ENV1</var>
+				<val>VAL1</val>
+			</envvar>
+		</envvars>
+		<retries>2</retries>
+		<redout>False</redout>
+		<stdout>/tmp/cat.stdout</stdout>
+		<workingdir>/tmp</workingdir>
+		<umask>077</umask>
+		<progname>cat</progname>
+		<stopsig>SIGTERM</stopsig>
+		<autolaunch>True</autolaunch>
+		<stoptime>10</stoptime>
+		<command>cat TASKMASTER</command>
+		<stderr>/tmp/cat.stderr</stderr>
+		<rederr>False</rederr>
+		<procnum>1</procnum>
+		<starttime>5</starttime>
+		<restart>always</restart>
+		<exitcodes>
+			<code>0</code>
+		</exitcodes>
+	</Program>
 </Programs>

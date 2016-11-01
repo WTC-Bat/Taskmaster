@@ -57,7 +57,7 @@ class Process(threading.Thread):
 		self.pop.poll()
 		if (self.stop == True):
 			# signum = tmfuncs.getSignalValue(self.progd["stopsig"])
-			tim.cancel()
+			tim.cancel()	#at the bottom?
 			log("Stopping process '" + self.name + "'", "./tmlog.txt", False)
 			# self.pop.send_signal(signum)
 			self.active = False
