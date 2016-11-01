@@ -21,7 +21,7 @@ class Program():
 		self.stopsig = "SIGTERM"
 		self.stoptime = 10
 		self.exitcodes = [0]
-		self.envvars = dict
+		self.envvars = dict()
 		self.workingdir = ""
 		self.umask = 022
 		# self.stdout = self.workingdir + self.progname + ".tm.stdout"
