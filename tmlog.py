@@ -16,10 +16,3 @@ def log(message, logfile, toprint):
 	log.close()
 	if (toprint == True):
 		print(message)
-
-	# path = os.path.join(os.path.dirname(__file__), logfile)
-	# txt = time.ctime() + "\t" + message
-	# with open(path, "a") as log:
-	# 	log.write(txt + "\n")
-	# if (toprint == True):
-	# 	print(message)
