@@ -17,6 +17,8 @@ class Process(threading.Thread):
 		self.name = self.threadName()
 		self.active = False
 		self.retries = 0
+		self.starting = False	#
+		self.stopping = False	#
 
 	def run(self):
 		"""
@@ -52,7 +54,6 @@ class Process(threading.Thread):
 	def monitor_timer(self):
 		"""Monitor the state of this process every second"""
 		tim = threading.Timer(1.0, self.monitor_timer)
-		# tim = threading.Timer(0.1, self.monitor_timer)
 		tim.start()
 		self.pop.poll()
 		if (self.stop == True):
@@ -93,9 +94,7 @@ class Process(threading.Thread):
 
 	def initializeProcess(self):
 		""""""
-		os.setpgrp()
-		# os.umask(format(self.progd["umask"], "03o"))
-		# os.umask(077)
+		os.setpgrp() #?
 		os.umask(int(self.progd["umask"]))
 
 	def threadName(self):

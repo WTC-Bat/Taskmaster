@@ -84,7 +84,7 @@ class Taskmaster(cmd.Cmd):
 							proc.stop = True;
 							signum = tmfuncs.getSignalValue(prog.stopsig)
 							proc.pop.send_signal(signum)
-							# time.sleep(1)	#?#
+							# proc.pop = None #?
 						proc.run()
 		elif (len(args) > 1):
 			while cnt < len(args):
@@ -98,7 +98,7 @@ class Taskmaster(cmd.Cmd):
 									proc.stop = True
 									signum = tmfuncs.getSignalValue(prog.stopsig)
 									proc.pop.send_signal(signum)
-									# time.sleep(1)	#?#
+									# proc.pop = None #?
 								proc.run()
 				if (found == False):
 					log("No program '" + args[cnt] + "' in config",
@@ -196,6 +196,7 @@ class Taskmaster(cmd.Cmd):
 								proc.stop = True
 								signum = tmfuncs.getSignalValue(prog.stopsig)
 								proc.pop.send_signal(signum)
+								# proc.pop = None #?
 			else:
 				while cnt < len(args):
 					for prog in self.programs:
@@ -211,6 +212,7 @@ class Taskmaster(cmd.Cmd):
 										signum = tmfuncs.getSignalValue(
 													prog.stopsig)
 										proc.pop.send_signal(signum)
+										# proc.pop = None #?
 					if (found == False):
 						log("No program '" + args[cnt] + "' in config",
 							"./tmlog.txt", True)
