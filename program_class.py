@@ -30,6 +30,8 @@ class Program():
 		self.stderr = ""
 		self.redout = False
 		self.rederr = False
+		self.stdoutmax = 2
+		self.stderrmax = 2
 		self.processes = list()
 		self.tmexit = False
 
@@ -69,6 +71,10 @@ class Program():
 				# 	self.redout = bool(val)
 				# elif key == "rederr":
 				# 	self.rederr = bool(val)
+				elif (key == "stdoutmax"):
+					self.stdoutmax = int(val)
+				elif (key == "stderrmax"):
+					self.stderrmax = int(val)
 				elif type(val) is dict and key == "envvars":
 					self.envvars = dict();
 					for k, v in val.iteritems():
@@ -84,13 +90,14 @@ class Program():
 		return (("progname: {}\ncommand: {}\nprocnum: {}\nautolaunch: {}\n"
 				"starttime: {}\nrestart: {}\nretries: {}\nstopsig: {}\n"
 				"stoptime: {}\nexitcodes: {}\nstdout: {}\nstderr: {}\n"
-				"redout: {}\nrederr: {}\nenvvars: {}\nworkingdir: {}\n"
-				"umask: {}\n"))\
+				"stdoutmax: {}\nstderrmax: {}\nredout: {}\nrederr: {}\n"
+				"envvars: {}\nworkingdir: {}\numask: {}\n"))\
 				.format(self.progname, self.command, self.procnum,
 						self.autolaunch, self.starttime, self.restart,
 						self.retries, self.stopsig, self.stoptime,
 						self.exitcodes, self.stdout, self.stderr, self.redout,
-						self.rederr, self.envvars, self.workingdir, self.umask)
+						self.rederr, self.stdoutmax, self.stderrmax,
+						self.envvars, self.workingdir, self.umask)
 
 	def __eq__(self, obj):
 		""""""

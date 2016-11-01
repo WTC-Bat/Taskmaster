@@ -119,6 +119,10 @@ def programFromElement(progel):
 		# 	prog.redout = el.text
 		# elif el.tag == "rederr":
 		# 	prog.rederr = el.text
+		elif (el.tag == "stdoutmax"):
+			prog.stdoutmax = int(el.text)
+		elif (el.tag == "stderrmax"):
+			prog.stderrmax = int(el.text)
 		elif el.tag == "envvars":
 			var = None
 			val = None

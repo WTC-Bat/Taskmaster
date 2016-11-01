@@ -1,32 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Programs>
+	<!-- Defines the members to use for 'Program' creation. -->
 	<Program>
+		<!-- Environment variables to launch 'Program' processes with -->
 		<envvars>
+			<!-- A single environment variable -->
 			<envvar>
+				<!-- Variable (left hand side) of environment variable -->
+				<!-- IE. PATH (PATH=) -->
 				<var>ENV2</var>
+				<!-- Value (right hand side) of environment variable -->
+				<!-- IE. /usr/bin (=/usr/bin) -->
 				<val>VAL2</val>
+			<!-- So that: -->
+			<!--  var=val -->
+			<!-- PATH=/usr/bin -->
 			</envvar>
 			<envvar>
 				<var>ENV1</var>
 				<val>VAL1</val>
 			</envvar>
 		</envvars>
+		<!-- Amount of times to retry the program when it stops unexpectedly -->
 		<retries>2</retries>
+		<!-- True to redirect stdout to a file. False to ignore output -->
+		<!-- See: 'stdout' -->
 		<redout>False</redout>
+		<!-- File to write stdout to if 'redout' is True -->
 		<stdout>/tmp/whoami.stdout</stdout>
+		<!-- Maximum number of bytes to write to file from program's stdout -->
+		<!-- 1000000 bytes == 1 megabyte -->
+		<stdoutmax>1000000</stdoutmax>
+		<!-- Working directory to set when launching the program -->
 		<workingdir>/tmp</workingdir>
+		<!-- Umask to set when launching the program -->
 		<umask>077</umask>
+		<!-- Program's diaply name -->
 		<progname>whoami</progname>
+		<!-- Signal used to stop program -->
 		<stopsig>SIGTERM</stopsig>
+		<!-- True to launch the program automatically when Taskmaster starts -->
 		<autolaunch>True</autolaunch>
+		<!-- How long to wait before deeming the program/process stopped -->
 		<stoptime>10</stoptime>
+		<!-- Command to run -->
 		<command>whoami</command>
+		<!-- File to write stderr to if 'rederr' is True -->
 		<stderr>/tmp/whoami.stderr</stderr>
+		<!-- True to redirect stderr to a file. False to ignore error output -->
 		<rederr>False</rederr>
+		<!-- Maximum number of bytes to write to file from program's stderr -->
+		<stderrmax>1000000</stderrmax>
+		<!-- How many processes to launch the program with -->
 		<procnum>1</procnum>
+		<!-- How long to wait before deeming the program started -->
 		<starttime>5</starttime>
+		<!-- When to restart the program. 'always', 'unexpected' or 'never' -->
 		<restart>always</restart>
+		<!-- The exit code/s that are expected from the program -->
 		<exitcodes>
+			<!-- A single exoected exit code -->
 			<code>0</code>
 			<code>2</code>
 			<code>4</code>
@@ -47,6 +80,7 @@
 		<retries>2</retries>
 		<redout>True</redout>
 		<stdout>top.stdout</stdout>
+		<stdoutmax>1000000</stdoutmax>
 		<workingdir></workingdir>
 		<umask>022</umask>
 		<progname>top</progname>
@@ -56,6 +90,7 @@
 		<command>/usr/bin/top</command>
 		<stderr>top.stderr</stderr>
 		<rederr>False</rederr>
+		<stderrmax>1000000</stderrmax>
 		<procnum>3</procnum>
 		<starttime>5</starttime>
 		<restart>never</restart>
@@ -80,6 +115,7 @@
 		<retries>2</retries>
 		<redout>False</redout>
 		<stdout>/tmp/cat.stdout</stdout>
+		<stdoutmax>1000000</stdoutmax>
 		<workingdir>/tmp</workingdir>
 		<umask>077</umask>
 		<progname>cat</progname>
@@ -89,6 +125,7 @@
 		<command>cat TASKMASTER</command>
 		<stderr>/tmp/cat.stderr</stderr>
 		<rederr>False</rederr>
+		<stderrmax>10</stderrmax>
 		<procnum>1</procnum>
 		<starttime>5</starttime>
 		<restart>always</restart>

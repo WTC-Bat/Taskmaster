@@ -14,7 +14,10 @@ def main():
 			"exitcodes" : [0, 2, 4, 5],
 			"stdout" : "/usr/bin/whoami.stdout",
 			"stderr" : "/usr/bin/whoami.stderr",
-			"redir" : "/usr/bin/whoami.redir",
+			"redout" : False
+			"rederr" : False
+			"stdoutmax" : 2
+			"stderrmax" : 2
 			"envvars" : {"ENV1" : "VAL1", "ENV2" : "VAL2"},
 			"workingdir" : "/tmp",
 			"umask" : "077"}
@@ -30,7 +33,10 @@ def main():
 			"exitcodes" : [0, 2, 4, 5],
 			"stdout" : "/usr/bin/whois.stdout",
 			"stderr" : "/usr/bin/whois.stderr",
-			"redir" : "/usr/bin/whois.redir",
+			"redout" : False
+			"rederr" : False
+			"stdoutmax" : 2
+			"stderrmax" : 2
 			"envvars" : {"ENV1" : "VAL1", "ENV2" : "VAL2"},
 			"workingdir" : "/tmp",
 			"umask" : "077"}
