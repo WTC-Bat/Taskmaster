@@ -52,7 +52,11 @@ class Process(threading.Thread):
 		self.stop = False
 		# self.active = True
 		self.started = False
-		self.startTimer()
+		if (int(self.progd["starttime"]) > 0):
+			self.startTimer()
+		else:
+			self.active = True
+			self.monitor()
 		# self.monitor()
 
 	def monitor(self):

@@ -218,7 +218,7 @@ class Taskmaster(cmd.Cmd):
 							# if (proc.active == True and proc.pop.pid):
 							# if (proc.active == True and proc.isAlive()):
 							# if (proc.active == True and proc.pop.returncode == None):
-								proc.stop = True	
+								proc.stop = True
 								signum = tmfuncs.getSignalValue(prog.stopsig)
 								proc.pop.send_signal(signum)
 								# proc.pop = None #?
@@ -245,6 +245,14 @@ class Taskmaster(cmd.Cmd):
 					found = False
 					cnt += 1
 
+	def programsStarted(self):
+		""""""
+		for prog in self.programs:
+			if (prog.active == False):
+				return (False)
+		return (True)
+
+
 	def handleSigint(self, signum, frame):
 		""""""
 		if (signum == 2):
@@ -269,6 +277,9 @@ def autolaunchPrograms(taskmaster):
 			totnum += num
 			num = 0
 			cnt += 1
+			log("Starting " + program.progname, "./tmlog.txt", True)
+			# while taskmaster.programsStarted == False:
+			log(program.progname + " started!", "./tmlog.txt" , True)
 	if (cnt > 0):
 		log(str(totnum) + " processes (" + str(cnt) + " program\s) launched"
 			+ " automatically",	"./tmlog.txt", True)
