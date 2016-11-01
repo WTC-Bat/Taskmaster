@@ -17,8 +17,10 @@ class Process(threading.Thread):
 		self.name = self.threadName()
 		self.active = False
 		self.retries = 0
-		self.starting = False	#
-		self.stopping = False	#
+		self.starttime = 0
+		self.stoptime = 0
+		self.started = False	#
+		self.stopped = False	#
 
 	def run(self):
 		"""
@@ -48,14 +50,20 @@ class Process(threading.Thread):
 			return
 
 		self.stop = False
-		self.active = True
-		self.monitor_timer()
+		# self.active = True
+		self.started = False
+		self.startTimer()
+		# self.monitor()
 
-	def monitor_timer(self):
+	def monitor(self):
 		"""Monitor the state of this process every second"""
-		tim = threading.Timer(1.0, self.monitor_timer)
+		tim = threading.Timer(1.0, self.monitor)
 		tim.start()
 		self.pop.poll()
+		# if (bool(self.progd["redout"]) == True):
+		# 	self.writeStdOut()
+		# if (bool(self.progd["rederr"]) == True):
+		# 	self.writeStdErr()
 		if (self.stop == True):
 			# signum = tmfuncs.getSignalValue(self.progd["stopsig"])
 			tim.cancel()	#at the bottom?
@@ -94,7 +102,7 @@ class Process(threading.Thread):
 
 	def initializeProcess(self):
 		""""""
-		os.setpgrp() #?
+		# os.setpgrp() #?
 		os.umask(int(self.progd["umask"]))
 
 	def threadName(self):
@@ -104,6 +112,31 @@ class Process(threading.Thread):
 
 		return (tname)
 
+	def startTimer(self):
+		""""""
+		tim = threading.Timer(1.0, self.startTimer)
+		tim.start()
+		if (self.starttime < int(self.progd["starttime"])):
+			self.starttime += 1
+		if (self.starttime == int(self.progd["starttime"])):
+			tim.cancel()
+			self.started = True
+			# print(self.name + " started")
+			self.starttime = 0
+			self.active = True
+			self.monitor()
+
+	def stopTimer(self):
+		""""""
+		tim = threading.Timer(1.0, self.stopTimer)
+		tim.start()
+		if (self.stoptime < int(self.progd["stoptime"])):
+			self.stoptime += 1
+		if self.stoptime == int(self.progd["stoptime"]):
+			self.stopped = True
+			print(self.name + " stopped")
+			self.stoptime = 0
+			tim.cancel()
 
 	def writeStdErr(self):
 		"""

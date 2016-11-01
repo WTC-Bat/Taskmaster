@@ -84,7 +84,10 @@ def programFromElement(progel):
 		elif el.tag == "procnum":
 			prog.procnum = int(el.text)
 		elif el.tag == "autolaunch":
-			prog.autolaunch = el.text
+			if (el.text == "True"):
+				prog.autolaunch = True
+			else:
+				prog.autolaunch = False
 		elif el.tag == "starttime":
 			prog.starttime = int(el.text)
 		elif el.tag == "restart":

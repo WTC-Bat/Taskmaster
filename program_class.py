@@ -20,7 +20,7 @@ class Program():
 		self.retries = 3
 		self.stopsig = "SIGTERM"
 		self.stoptime = 10
-		self.exitcode = [0]
+		self.exitcodes = [0]
 		self.envvars = dict
 		self.workingdir = ""
 		self.umask = 022
