@@ -91,7 +91,7 @@
 		<stderrmax>1000000</stderrmax>
 		<procnum>3</procnum>
 		<starttime>5</starttime>
-		<restart>never</restart>
+		<restart>always</restart>
 		<exitcodes>
 			<code>0</code>
 		</exitcodes>
