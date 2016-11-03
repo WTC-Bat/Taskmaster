@@ -43,6 +43,7 @@ class Taskmaster(cmd.Cmd):
 	def do_exit(self, args):
 		'''Exits the Taskmaster shell when user inputs "exit"'''
 		if (len(self.programs) > 0):
+			print("\nStopping programs. Please wait...\n")
 			self.stopPrograms(["stop", "all"])
 		log("TaskMaster exiting", "./tmlog.txt", False)
 		exit(0)
@@ -108,10 +109,11 @@ class Taskmaster(cmd.Cmd):
 						"./tmlog.txt", True)
 				found = False
 				cnt += 1
-		log("Restarting all programs", "./tmlog.txt", False)
-		print("\nRestarting all programs. Please wait...\n")
-		while self.programsWaiting() == True:
-			continue
+		if (self.programsWaiting() == True):
+			log("Restarting all programs", "./tmlog.txt", False)
+			print("\nRestarting all programs. Please wait...\n")
+			while self.programsWaiting() == True:
+				continue
 
 	def showStatus(self, args):
 		""""""
@@ -189,10 +191,11 @@ class Taskmaster(cmd.Cmd):
 							"./tmlog.txt", True)
 					found = False
 					cnt += 1
-		log("Starting x Progams", "./tmlog.txt", False)
-		print("\nStarting x programs. Please wait...\n")
-		while self.programsWaiting() == True:
-			continue
+		if (self.programsWaiting() == True):
+			log("Starting x Progams", "./tmlog.txt", False)
+			print("\nStarting x programs. Please wait...\n")
+			while self.programsWaiting() == True:
+				continue
 
 	def stopPrograms(self, args):
 		""""""
