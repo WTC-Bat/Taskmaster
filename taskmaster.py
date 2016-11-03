@@ -245,13 +245,14 @@ class Taskmaster(cmd.Cmd):
 					found = False
 					cnt += 1
 
-	def programsStarted(self):
+	def programsWaiting(self):
 		""""""
 		for prog in self.programs:
-			if (prog.active == False):
-				return (False)
-		return (True)
-
+			if (len(prog.processes) > 0):
+				for proc in prog.processes:
+					if ((proc.starting == True) or (proc.stopping == True)):
+						return (True)
+		return (False)
 
 	def handleSigint(self, signum, frame):
 		""""""
@@ -263,7 +264,6 @@ class Taskmaster(cmd.Cmd):
 def autolaunchPrograms(taskmaster):
 	""""""
 	cnt = 0
-	num = 0
 	totnum = 0
 
 	if (len(taskmaster.programs) == 0):
@@ -271,18 +271,17 @@ def autolaunchPrograms(taskmaster):
 		return
 	for program in taskmaster.programs:
 		if (program.autolaunch == True):
-			while num < program.procnum:
-				program.runAndMonitor()
-				num += 1
-			totnum += num
-			num = 0
+			totnum += program.runAndMonitor()
 			cnt += 1
-			log("Starting " + program.progname, "./tmlog.txt", True)
-			# while taskmaster.programsStarted == False:
-			log(program.progname + " started!", "./tmlog.txt" , True)
+			log("Starting " + program.progname, "./tmlog.txt", False)
+	# if (taskmaster.programsWaiting() == True):
 	if (cnt > 0):
-		log(str(totnum) + " processes (" + str(cnt) + " program\s) launched"
-			+ " automatically",	"./tmlog.txt", True)
+		print("\nPlease wait. Taskmaster is starting autolaunch programs...\n")
+		while taskmaster.programsWaiting() == True:
+			continue
+		log(str(totnum) + " processes (" + str(cnt) + " program\s) successfully"
+			+ " launched",	"./tmlog.txt", True)
+		print("")
 	else:
 		log("No programs set to launch automatically", "./tmlog.txt", True)
 
@@ -295,12 +294,13 @@ def clearLog():
 
 
 def main():
-	""""""
+	"""
+	NOTE: Nothing printed here will be visible as cmdloop clears the screen
+	"""
 	tm = Taskmaster()
 
 	clearLog()
 	log("TaskMaster started", "./tmlog.txt", False)
-	print("Loading programs")
 	if str(platform.system()) != "Windows":
 		os.system("clear")
 	else:

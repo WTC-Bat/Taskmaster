@@ -24,8 +24,6 @@ class Program():
 		self.envvars = dict()
 		self.workingdir = ""
 		self.umask = 022
-		# self.stdout = self.workingdir + self.progname + ".tm.stdout"
-		# self.stderr = self.workingdir + self.progname + ".tm.stderr"
 		self.stdout = ""
 		self.stderr = ""
 		self.redout = False
@@ -115,9 +113,14 @@ class Program():
 
 	def runAndMonitor(self):
 		""""""
-		proc = procc.Process(self.__dict__)
-		self.processes.append(proc)
-		proc.start()
-		log("Program '" + self.progname + "' process starting", "./tmlog.txt",
-			False)
-		# time.sleep(0.3)	#if th thread doesn't sleep here, output will interrupt prompt
+		num = 0
+
+		while num < self.procnum:
+			proc = procc.Process(self.__dict__)
+			self.processes.append(proc)
+			# proc.start()
+			proc.run()
+			log("Program '" + self.progname + "' process starting", "./tmlog.txt",
+				False)
+			num += 1
+		return (num)

@@ -17,10 +17,13 @@ class Process(threading.Thread):
 		self.name = self.threadName()
 		self.active = False
 		self.retries = 0
-		self.starttime = 0
-		self.stoptime = 0
+		self.timetostart = 0
+		self.timetostop = 0
 		self.started = False	#
 		self.stopped = False	#
+		self.starting = False
+		self.stopping = False
+		# self.waitfor = False
 
 	def run(self):
 		"""
@@ -44,18 +47,18 @@ class Process(threading.Thread):
 										stdout=subprocess.PIPE, env=envs,
 										preexec_fn=self.initializeProcess)
 		except (ValueError, OSError) as e:
-			# print("Invalid arguments given to 'subprocess.Popen'")
+			print("Invalid arguments given to 'subprocess.Popen'")
 			# print("Program Name: " + self.progd["progname"])
 			log("Caught exception '" + str(e) + "'", "./tmlog.txt", False)
 			return
 
 		self.stop = False
-		# self.active = True
+		self.active = True
 		self.started = False
 		if (int(self.progd["starttime"]) > 0):
-			self.startTimer()
+			self.starttimeTimer()
 		else:
-			self.active = True
+			# self.active = True
 			self.monitor()
 		# self.monitor()
 
@@ -110,36 +113,40 @@ class Process(threading.Thread):
 		os.umask(int(self.progd["umask"]))
 
 	def threadName(self):
-		"""Return a number for multiple processes of the same program"""
+		"""Return a name for the 'Process'"""
 		idx = len(self.progd["processes"]) + 1
 		tname = "Thread-" + self.progd["progname"] + "-" + str(idx)
 
 		return (tname)
 
-	def startTimer(self):
+	def starttimeTimer(self):
 		""""""
-		tim = threading.Timer(1.0, self.startTimer)
+		self.starting = True
+		tim = threading.Timer(1.0, self.starttimeTimer)
 		tim.start()
-		if (self.starttime < int(self.progd["starttime"])):
-			self.starttime += 1
-		if (self.starttime == int(self.progd["starttime"])):
-			tim.cancel()
+		if (self.timetostart < int(self.progd["starttime"])):
+			self.timetostart += 1
+		if (self.timetostart == int(self.progd["starttime"])):
 			self.started = True
-			# print(self.name + " started")
-			self.starttime = 0
-			self.active = True
+			self.timetostart = 0
+			# self.active = True
+			self.starting = False
 			self.monitor()
+			tim.cancel()
 
-	def stopTimer(self):
+	def stoptimeTimer(self):
 		""""""
-		tim = threading.Timer(1.0, self.stopTimer)
+		tim = threading.Timer(1.0, self.stoptimeTimer)
 		tim.start()
-		if (self.stoptime < int(self.progd["stoptime"])):
-			self.stoptime += 1
-		if self.stoptime == int(self.progd["stoptime"]):
+		self.stopping = True
+		if (self.timetostop < int(self.progd["stoptime"])):
+			self.timetostop += 1
+		if self.timetostop == int(self.progd["stoptime"]):
 			self.stopped = True
 			print(self.name + " stopped")
-			self.stoptime = 0
+			self.timetostop = 0
+			# self.active = False
+			self.stopping = False
 			tim.cancel()
 
 	def writeStdErr(self):
