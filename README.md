@@ -2,38 +2,31 @@
 
 ## Python:
 
-# Problem with programs that run once and quit (What?)
-
-# Exit problems (Tied to below?)
-
-Sometimes, it seems, when trying to stop a process, the kill signal is
-	sent at a point during monitoring when the process hasn't started but
-	'active' is True. Setting the timer interval in "process_class.py" to
-	0.1 may give help as it is more accurate than 1.0 (every second)
-	Maybe removing/cleaning Process.pop (Popen) object will help
-	 (?)
+Setting the timer interval in "process_class.py" to 0.1 may give more
+	accuracy than 1.0 (every second)
 
 ### TODO:
 	- Logging
+		- A bit more needed? And Check!
 	- Program Aspects:
 		- Progname
 			- Done!
 		- Command
 			- Done!
 		- Procnum
-			- Done!		(test)
+			- Done!
 		- Starttime
-			- Done!		(?)
+			- Done!
 		- Restart
-			- Done!		(test)
+			- Done!
 		- Retries
-			- Done!		(test)
+			- Done!
 		- Autolaunch
-			- Done!		(test)
+			- Done!
 		- Stoptime
-			-
+			- Done!
 		- Stopsig
-		 	- Done!		(!f)
+		 	- Done!
 		- Stderr
 			-
 		- Stdout
@@ -45,16 +38,18 @@ Sometimes, it seems, when trying to stop a process, the kill signal is
 		- Exitcodes
 			- Done!
 		- Envvars
-			- Done!		(test?)
+			- Done!
 		- Workingdir
-			- Done!		(test?)
+			- Done!
 		- Umask
-			- Done!		(test?)
+			- Done!
 
 	- TaskMaster Commands:
 		- stop
 			- Done!
 		- start
-			-
+			- Done!
 		- status
-			-
+			- Done!
+		- restart
+			- Done!
