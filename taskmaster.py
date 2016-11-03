@@ -43,21 +43,32 @@ class Taskmaster(cmd.Cmd):
 	def do_exit(self, args):
 		'''Exits the Taskmaster shell when user inputs "exit"'''
 		if (len(self.programs) > 0):
-			print("\nStopping programs. Please wait...\n")
 			self.stopPrograms(["stop", "all"])
-		log("TaskMaster exiting", "./tmlog.txt", False)
+		log("TaskMaster exiting", "./tmlog.txt", True)
 		exit(0)
 
 	def default(self, line):
 		'''Custom input handling'''
 		log("Input: '" + line + "'", "./tmlog.txt", False)
 		if (line.startswith("status")):
+			if (len(self.programs) < 1):
+				print("No programs")
+				return
 			self.showStatus(line.split())
 		elif (line.startswith("stop")):	#this if statement is only if programs require a specific SIGNAL to stop
+			if (len(self.programs) < 1):
+				print("No programs")
+				return
 			self.stopPrograms(line.split())
 		elif (line.startswith("start")):
+			if (len(self.programs) < 1):
+				print("No programs")
+				return
 			self.startPrograms(line.split())
 		elif (line.startswith("restart")):
+			if (len(self.programs) < 1):
+				print("No programs")
+				return
 			self.restartPrograms(line.split())
 		# elif (line == "-h" or line == "help"):
 		# 	print("Help:")
@@ -67,21 +78,41 @@ class Taskmaster(cmd.Cmd):
 		else:
 			log("Unknown command: " + line, "./tmlog.txt", True)
 
+	def activePrograms(self):
+		"""Return the amount of programs with active processes"""
+		cnt = 0
+
+		for prog in self.programs:
+			if (len(prog.processes) > 0):
+				for proc in prog.processes:
+					if (proc.active == True):
+						cnt += 1
+						break
+		return (cnt)
+
+	def allProgramsActive(self):
+		""""""
+		for prog in self.programs:
+			if (len(prog.processes) > 0):
+				for proc in prog.processes:
+					if (proc.active == False):
+						return (False)
+			else:
+				return (False)
+		return (True)
+
 	def restartPrograms(self, args):
 		""""""
 		cnt = 1
+		num = 0
 		found = False
 
 		if (len(args) == 1):
+			num = len(self.programs)
 			for prog in self.programs:
 				if (len(prog.processes) > 0):
 					for proc in prog.processes:
-						# if (proc.active == True):
 						if (proc.active == True and proc.pop.returncode == None):
-						# if (proc.active == True and proc.started == True
-						# 	and	proc.pop):
-							# log("Restarting " + proc.name + "...",
-							# 	"./tmlog.txt", False)
 							proc.stop = True;
 							signum = tmfuncs.getSignalValue(prog.stopsig)
 							proc.pop.send_signal(signum)
@@ -92,13 +123,10 @@ class Taskmaster(cmd.Cmd):
 				for prog in self.programs:
 					if (prog.progname == args[cnt]):
 						found = True
+						num += 1
 						if (len(prog.processes) > 0):
 							for proc in prog.processes:
-								# if (proc.active == True):
 								if (proc.active == True and proc.pop.returncode == None):
-								# if (proc.active == True
-								# 	and proc.started == True
-								# 	and proc.pop):
 									proc.stop = True
 									signum = tmfuncs.getSignalValue(prog.stopsig)
 									proc.pop.send_signal(signum)
@@ -110,8 +138,8 @@ class Taskmaster(cmd.Cmd):
 				found = False
 				cnt += 1
 		if (self.programsWaiting() == True):
-			log("Restarting all programs", "./tmlog.txt", False)
-			print("\nRestarting all programs. Please wait...\n")
+			log("Restarting " + str(num) + " programs", "./tmlog.txt", False)
+			print("\nRestarting " + str(num) + " programs. Please wait...\n")
 			while self.programsWaiting() == True:
 				continue
 
@@ -160,6 +188,8 @@ class Taskmaster(cmd.Cmd):
 	def startPrograms(self, args):
 		""""""
 		cnt = 1
+		num = 0
+		procs = 0
 		found = False
 
 		if (len(args) == 1):
@@ -168,38 +198,54 @@ class Taskmaster(cmd.Cmd):
 					+ "[program2 name])")
 		elif (len(args) > 1):
 			if (args[1] == "all"):
+				if (self.allProgramsActive() == True):
+					print("All programs already active. Use 'restart' to"
+							+ " restart all programs")
+					return
+				num = (len(self.programs)) - (self.activePrograms())
 				for prog in self.programs:
 					if (len(prog.processes) > 0):
 						for proc in prog.processes:
 							if (proc.active == False):
+								procs += 1
 								proc.run()
 					else:
-						prog.runAndMonitor()
+						procs = prog.runAndMonitor()
 			else:
 				while cnt < len(args):
 					for prog in self.programs:
 						if (prog.progname == args[cnt]):
 							found = True
+							if (prog.hasInactiveProcesses() == False
+									and len(prog.processes) > 0):
+								print("Program '" + prog.progname
+										+ "' already started")
+								break
+							num += 1
 							if (len(prog.processes) > 0):
 								for proc in prog.processes:
 									if (proc.active == False):
+										procs += 1
 										proc.run()
 							else:
-								prog.runAndMonitor()
+								procs = prog.runAndMonitor()
 					if (found == False):
 						log("No program '" + args[cnt] + "' in config",
 							"./tmlog.txt", True)
 					found = False
 					cnt += 1
-		if (self.programsWaiting() == True):
-			log("Starting x Progams", "./tmlog.txt", False)
-			print("\nStarting x programs. Please wait...\n")
+		if (num > 0):
+			log("Starting " + str(num) + " progam\s", "./tmlog.txt", False)
+			print("Starting " + str(num) + " program\s. Please wait...")
 			while self.programsWaiting() == True:
 				continue
+			print(str(procs) + " process\es started")
 
 	def stopPrograms(self, args):
 		""""""
 		cnt = 1
+		num = 0
+		procs = 0
 		found = False
 
 		if (len(args) == 1):
@@ -208,40 +254,49 @@ class Taskmaster(cmd.Cmd):
 					+ "[program2 name])")
 		elif (len(args) > 1):
 			if (args[1] == "all"):
+				num = self.activePrograms()
+				if (num == 0):
+					print("All programs already stopped")
+					return
 				for prog in self.programs:
 					if (len(prog.processes) > 0):
 						for proc in prog.processes:
 							if (proc.active == True):
-							# if (proc.active == True and proc.pop):
-							# if (proc.active == True and proc.pop.pid):
-							# if (proc.active == True and proc.isAlive()):
-							# if (proc.active == True and proc.pop.returncode == None):
 								proc.stop = True
+								proc.stopping = True
 								signum = tmfuncs.getSignalValue(prog.stopsig)
 								proc.pop.send_signal(signum)
-								# proc.pop = None #?
+								procs += 1
 			else:
 				while cnt < len(args):
 					for prog in self.programs:
 						if (prog.progname == args[cnt]):
 							found = True
+							if (prog.hasActiveProcesses() == False):
+								print("Program '" + prog.progname
+										+ "' already stopped")
+								break
+							num += 1
 							if (len(prog.processes) > 0):
 								for proc in prog.processes:
 									if (proc.active == True):
-									# if (proc.active == True and proc.pop)
-									# if (proc.active == True and proc.pop.pid):
-									# if (proc.active == True and proc.isAlive()):
-									# if (proc.active == True and proc.pop.returncode == None):
 										proc.stop = True
+										proc.stopping = True
 										signum = tmfuncs.getSignalValue(
 													prog.stopsig)
 										proc.pop.send_signal(signum)
-										# proc.pop = None #?
+										procs += 1
 					if (found == False):
 						log("No program '" + args[cnt] + "' in config",
 							"./tmlog.txt", True)
 					found = False
 					cnt += 1
+			if (num > 0):
+				print("Stopping " + str(num) + " program\s. Please wait...")
+				while self.programsWaiting() == True:
+					continue
+				print(str(procs) + " process\es stopped.")
+			num = 0
 
 	def programsWaiting(self):
 		""""""
@@ -272,14 +327,12 @@ def autolaunchPrograms(taskmaster):
 			totnum += program.runAndMonitor()
 			cnt += 1
 			log("Starting " + program.progname, "./tmlog.txt", False)
-	# if (taskmaster.programsWaiting() == True):
 	if (cnt > 0):
-		print("\nTaskmaster is starting autolaunch programs. Please wait...\n")
+		print("Taskmaster is starting autolaunch programs. Please wait...")
 		while taskmaster.programsWaiting() == True:
 			continue
 		log(str(totnum) + " processes (" + str(cnt) + " program\s) successfully"
 			+ " launched",	"./tmlog.txt", True)
-		print("")
 	else:
 		log("No programs set to launch automatically", "./tmlog.txt", True)
 

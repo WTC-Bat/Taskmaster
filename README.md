@@ -2,8 +2,6 @@
 
 ## Python:
 
-# still uses "Starting x programs" when starting programs
-
 # Problem with programs that run once and quit (What?)
 
 # Exit problems (Tied to below?)

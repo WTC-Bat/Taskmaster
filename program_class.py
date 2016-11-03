@@ -65,10 +65,6 @@ class Program():
 					self.redout = val
 				elif key == "rederr":
 					self.rederr = val
-				# elif key == "redout":
-				# 	self.redout = bool(val)
-				# elif key == "rederr":
-				# 	self.rederr = bool(val)
 				elif (key == "stdoutmax"):
 					self.stdoutmax = int(val)
 				elif (key == "stderrmax"):
@@ -110,6 +106,22 @@ class Program():
 	# def removeProcess(process):
 	# 	""""""
 	# 	self.processes.remove(process)
+
+	def hasActiveProcesses(self):
+		""""""
+		if (len(self.processes) > 0):
+			for proc in self.processes:
+				if (proc.active == True):
+					return (True)
+		return (False)
+
+	def hasInactiveProcesses(self):
+		""""""
+		if (len(self.processes) > 0):
+			for proc in self.processes:
+				if (proc.active == False):
+					return (True)
+		return (False)
 
 	def runAndMonitor(self):
 		""""""

@@ -42,7 +42,7 @@
 		<!-- True to launch the program automatically when Taskmaster starts -->
 		<autolaunch>True</autolaunch>
 		<!-- How long to wait before deeming the program/process stopped -->
-		<stoptime>10</stoptime>
+		<stoptime>5</stoptime>
 		<!-- Command to run -->
 		<command>whoami</command>
 		<!-- File to write stderr to if 'rederr' is True -->
@@ -56,14 +56,12 @@
 		<!-- How long to wait before deeming the program started -->
 		<starttime>5</starttime>
 		<!-- When to restart the program. 'always', 'unexpected' or 'never' -->
-		<restart>always</restart>
+		<restart>never</restart>
 		<!-- The exit code/s that are expected from the program -->
 		<exitcodes>
-			<!-- A single exoected exit code -->
+			<!-- A single expected exit code -->
 			<code>0</code>
-			<code>2</code>
-			<code>4</code>
-			<code>5</code>
+			<!-- <code>2</code> -->
 		</exitcodes>
 	</Program>
 	<Program>
@@ -78,7 +76,7 @@
 			</envvar>
 		</envvars>
 		<retries>2</retries>
-		<redout>True</redout>
+		<redout>False</redout>
 		<stdout>top.stdout</stdout>
 		<stdoutmax>1000000</stdoutmax>
 		<workingdir></workingdir>
@@ -86,7 +84,7 @@
 		<progname>top</progname>
 		<stopsig>SIGTERM</stopsig>
 		<autolaunch>True</autolaunch>
-		<stoptime>10</stoptime>
+		<stoptime>5</stoptime>
 		<command>/usr/bin/top</command>
 		<stderr>top.stderr</stderr>
 		<rederr>False</rederr>

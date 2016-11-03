@@ -19,8 +19,8 @@ class Process(threading.Thread):
 		self.retries = 0
 		self.timetostart = 0
 		self.timetostop = 0
-		self.started = False	#
-		self.stopped = False	#
+		# self.started = False	#
+		# self.stopped = False	#
 		self.starting = False
 		self.stopping = False
 		# self.waitfor = False
@@ -54,13 +54,10 @@ class Process(threading.Thread):
 
 		self.stop = False
 		self.active = True
-		self.started = False
 		if (int(self.progd["starttime"]) > 0):
 			self.starttimeTimer()
 		else:
-			# self.active = True
 			self.monitor()
-		# self.monitor()
 
 	def monitor(self):
 		"""Monitor the state of this process every second"""
@@ -72,14 +69,17 @@ class Process(threading.Thread):
 		# if (bool(self.progd["rederr"]) == True):
 		# 	self.writeStdErr()
 		if (self.stop == True):
-			# signum = tmfuncs.getSignalValue(self.progd["stopsig"])
 			tim.cancel()	#at the bottom?
 			log("Stopping process '" + self.name + "'", "./tmlog.txt", False)
-			# self.pop.send_signal(signum)
-			self.active = False
+			self.active = False	#?
+			# self.stopping = True
+			self.stoptimeTimer()
 			return
 		if (self.pop.returncode != None):
-			self.stop = True
+			tim.cancel()
+			#?
+			self.active = False
+			#?
 			if (self.progd["restart"] == "always"):
 				self.run()
 				log("Restarting '" + self.name + "'", "./tmlog.txt", False)
@@ -93,10 +93,6 @@ class Process(threading.Thread):
 					log("Attempting to relaunch '" + self.name + "'",
 						"./tmlog.txt", False)
 					log("Retries: " + str(self.retries))
-				else:
-					self.stop = True
-			else:
-				self.stop = True
 
 	def expectedReturnCode(self):
 		"""
@@ -127,27 +123,28 @@ class Process(threading.Thread):
 		if (self.timetostart < int(self.progd["starttime"])):
 			self.timetostart += 1
 		if (self.timetostart == int(self.progd["starttime"])):
-			self.started = True
+			tim.cancel()
+			# self.started = True
 			self.timetostart = 0
 			# self.active = True
 			self.starting = False
 			self.monitor()
-			tim.cancel()
+			# tim.cancel()
 
 	def stoptimeTimer(self):
 		""""""
+		# self.stopping = True
 		tim = threading.Timer(1.0, self.stoptimeTimer)
 		tim.start()
-		self.stopping = True
 		if (self.timetostop < int(self.progd["stoptime"])):
 			self.timetostop += 1
-		if self.timetostop == int(self.progd["stoptime"]):
-			self.stopped = True
-			print(self.name + " stopped")
-			self.timetostop = 0
-			# self.active = False
-			self.stopping = False
+		if (self.timetostop == int(self.progd["stoptime"])):
 			tim.cancel()
+			# self.stopped = True
+			self.timetostop = 0
+			# self.active = False #?
+			self.stopping = False
+			# tim.cancel()
 
 	def writeStdErr(self):
 		"""
