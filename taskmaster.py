@@ -66,19 +66,6 @@ class Taskmaster(cmd.Cmd):
 		else:
 			log("Unknown command: " + line, "./tmlog.txt", True)
 
-	def launchProgram(self, program):
-		""""""
-		cnt = 0
-		num = 0
-		totnum = 0
-
-		log("Launching " + program.progname, "./tmlog.txt", False)
-		while cnt < program.procnum:
-			program.runAndMonitor()
-			cnt += 1
-		log(str(cnt) + " processes started from program " + program.progname,
-			"./tmlog.txt", False)
-
 	def restartPrograms(self, args):
 		""""""
 		cnt = 1
@@ -121,6 +108,10 @@ class Taskmaster(cmd.Cmd):
 						"./tmlog.txt", True)
 				found = False
 				cnt += 1
+		log("Restarting all programs", "./tmlog.txt", False)
+		print("\nRestarting all programs. Please wait...\n")
+		while self.programsWaiting() == True:
+			continue
 
 	def showStatus(self, args):
 		""""""
@@ -181,7 +172,7 @@ class Taskmaster(cmd.Cmd):
 							if (proc.active == False):
 								proc.run()
 					else:
-						self.launchProgram(prog)
+						prog.runAndMonitor()
 			else:
 				while cnt < len(args):
 					for prog in self.programs:
@@ -192,12 +183,16 @@ class Taskmaster(cmd.Cmd):
 									if (proc.active == False):
 										proc.run()
 							else:
-								self.launchProgram(prog)
+								prog.runAndMonitor()
 					if (found == False):
 						log("No program '" + args[cnt] + "' in config",
 							"./tmlog.txt", True)
 					found = False
 					cnt += 1
+		log("Starting x Progams", "./tmlog.txt", False)
+		print("\nStarting x programs. Please wait...\n")
+		while self.programsWaiting() == True:
+			continue
 
 	def stopPrograms(self, args):
 		""""""
@@ -276,7 +271,7 @@ def autolaunchPrograms(taskmaster):
 			log("Starting " + program.progname, "./tmlog.txt", False)
 	# if (taskmaster.programsWaiting() == True):
 	if (cnt > 0):
-		print("\nPlease wait. Taskmaster is starting autolaunch programs...\n")
+		print("\nTaskmaster is starting autolaunch programs. Please wait...\n")
 		while taskmaster.programsWaiting() == True:
 			continue
 		log(str(totnum) + " processes (" + str(cnt) + " program\s) successfully"
