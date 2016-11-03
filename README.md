@@ -2,6 +2,8 @@
 
 ## Python:
 
+# still uses "Starting x programs" when starting programs
+
 # Problem with programs that run once and quit (What?)
 
 # Exit problems (Tied to below?)
@@ -11,6 +13,7 @@ Sometimes, it seems, when trying to stop a process, the kill signal is
 	'active' is True. Setting the timer interval in "process_class.py" to
 	0.1 may give help as it is more accurate than 1.0 (every second)
 	Maybe removing/cleaning Process.pop (Popen) object will help
+	 (?)
 
 ### TODO:
 	- Logging
@@ -22,7 +25,7 @@ Sometimes, it seems, when trying to stop a process, the kill signal is
 		- Procnum
 			- Done!		(test)
 		- Starttime
-			-
+			- Done!		(?)
 		- Restart
 			- Done!		(test)
 		- Retries
@@ -44,11 +47,11 @@ Sometimes, it seems, when trying to stop a process, the kill signal is
 		- Exitcodes
 			- Done!
 		- Envvars
-			-
+			- Done!		(test?)
 		- Workingdir
-			-
+			- Done!		(test?)
 		- Umask
-			-
+			- Done!		(test?)
 
 	- TaskMaster Commands:
 		- stop
