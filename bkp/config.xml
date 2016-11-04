@@ -25,7 +25,7 @@
 		<retries>2</retries>
 		<!-- True to redirect stdout to a file. False to ignore output -->
 		<!-- See: 'stdout' -->
-		<redout>False</redout>
+		<redout>True</redout>
 		<!-- File to write stdout to if 'redout' is True -->
 		<stdout>/tmp/whoami.stdout</stdout>
 		<!-- Maximum number of bytes to write to file from program's stdout -->
@@ -42,7 +42,7 @@
 		<!-- True to launch the program automatically when Taskmaster starts -->
 		<autolaunch>True</autolaunch>
 		<!-- How long to wait before deeming the program/process stopped -->
-		<stoptime>10</stoptime>
+		<stoptime>5</stoptime>
 		<!-- Command to run -->
 		<command>whoami</command>
 		<!-- File to write stderr to if 'rederr' is True -->
@@ -59,11 +59,9 @@
 		<restart>always</restart>
 		<!-- The exit code/s that are expected from the program -->
 		<exitcodes>
-			<!-- A single exoected exit code -->
+			<!-- A single expected exit code -->
 			<code>0</code>
-			<code>2</code>
-			<code>4</code>
-			<code>5</code>
+			<!-- <code>2</code> -->
 		</exitcodes>
 	</Program>
 	<Program>
@@ -78,7 +76,7 @@
 			</envvar>
 		</envvars>
 		<retries>2</retries>
-		<redout>True</redout>
+		<redout>False</redout>
 		<stdout>top.stdout</stdout>
 		<stdoutmax>1000000</stdoutmax>
 		<workingdir></workingdir>
@@ -86,19 +84,16 @@
 		<progname>top</progname>
 		<stopsig>SIGTERM</stopsig>
 		<autolaunch>True</autolaunch>
-		<stoptime>10</stoptime>
+		<stoptime>5</stoptime>
 		<command>/usr/bin/top</command>
 		<stderr>top.stderr</stderr>
 		<rederr>False</rederr>
 		<stderrmax>1000000</stderrmax>
 		<procnum>3</procnum>
 		<starttime>5</starttime>
-		<restart>never</restart>
+		<restart>always</restart>
 		<exitcodes>
 			<code>0</code>
-			<code>2</code>
-			<code>4</code>
-			<code>5</code>
 		</exitcodes>
 	</Program>
 	<Program>
@@ -115,20 +110,20 @@
 		<retries>2</retries>
 		<redout>False</redout>
 		<stdout>/tmp/cat.stdout</stdout>
-		<stdoutmax>1000000</stdoutmax>
+		<stdoutmax>10</stdoutmax>
 		<workingdir>/tmp</workingdir>
 		<umask>077</umask>
 		<progname>cat</progname>
 		<stopsig>SIGTERM</stopsig>
-		<autolaunch>True</autolaunch>
+		<autolaunch>False</autolaunch>
 		<stoptime>10</stoptime>
-		<command>cat TASKMASTER</command>
+		<command>cat</command>
 		<stderr>/tmp/cat.stderr</stderr>
 		<rederr>False</rederr>
 		<stderrmax>10</stderrmax>
 		<procnum>1</procnum>
 		<starttime>5</starttime>
-		<restart>always</restart>
+		<restart>never</restart>
 		<exitcodes>
 			<code>0</code>
 		</exitcodes>
