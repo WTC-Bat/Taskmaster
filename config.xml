@@ -96,4 +96,36 @@
 			<code>0</code>
 		</exitcodes>
 	</Program>
+	<Program>
+		<envvars>
+			<envvar>
+				<var>ENV2</var>
+				<val>VAL2</val>
+			</envvar>
+			<envvar>
+				<var>ENV1</var>
+				<val>VAL1</val>
+			</envvar>
+		</envvars>
+		<retries>2</retries>
+		<redout>False</redout>
+		<stdout>who.stdout</stdout>
+		<stdoutmax>1000</stdoutmax>
+		<workingdir></workingdir>
+		<umask>022</umask>
+		<progname>who</progname>
+		<stopsig>SIGTERM</stopsig>
+		<autolaunch>True</autolaunch>
+		<stoptime>5</stoptime>
+		<command>/usr/bin/who</command>
+		<stderr>who.stderr</stderr>
+		<rederr>False</rederr>
+		<stderrmax>1000</stderrmax>
+		<procnum>1</procnum>
+		<starttime>5</starttime>
+		<restart>never</restart>
+		<exitcodes>
+			<code>0</code>
+		</exitcodes>
+	</Program>
 </Programs>

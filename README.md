@@ -7,6 +7,10 @@ Setting the timer interval in "process_class.py" to 0.1 may give more
 
 Problem when a third program is added to config!? Could be my osx vm (memory)
 	could also be the writing of stdout and stderr
+		|
+		V
+	seems to be attributed to "restart == always". Need to check
+	timer/monitor loops
 
 ### TODO:
 	- Logging

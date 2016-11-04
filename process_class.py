@@ -73,18 +73,18 @@ class Process(threading.Thread):
 			log("Stopping process '" + self.name + "'", "./tmlog.txt", False)
 			self.active = False	#?
 			# self.stopping = True
-			if (bool(self.progd["redout"]) == True):
-				self.writeStdOut()
-			if (bool(self.progd["rederr"]) == True):
-				self.writeStdErr()
+			# if (bool(self.progd["redout"]) == True):
+			# 	self.writeStdOut()
+			# if (bool(self.progd["rederr"]) == True):
+			# 	self.writeStdErr()
 			self.stoptimeTimer()
 			return
 		if (self.pop.returncode != None):
 			tim.cancel()
-			if (bool(self.progd["redout"]) == True):
-				self.writeStdOut()
-			if (bool(self.progd["rederr"]) == True):
-				self.writeStdErr()
+			# if (bool(self.progd["redout"]) == True):
+			# 	self.writeStdOut()
+			# if (bool(self.progd["rederr"]) == True):
+			# 	self.writeStdErr()
 			#?
 			self.active = False
 			#?
