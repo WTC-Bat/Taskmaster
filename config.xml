@@ -120,7 +120,7 @@
 		<command>/usr/bin/who</command>
 		<stderr>who.stderr</stderr>
 		<rederr>False</rederr>
-		<stderrmax>1000</stderrmax>
+		<stderrmax>100</stderrmax>
 		<procnum>1</procnum>
 		<starttime>5</starttime>
 		<restart>never</restart>

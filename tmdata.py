@@ -51,11 +51,41 @@ def loadConfig(config):
 				log("'" + prog.progname + "' command invalid. Not loading",
 					"./tmlog.txt", True)
 			# progs.append(prog)
+	else:
+		log("Config file not found or is empty", "./tmlog.txt", True)
 	return (progs)
 
 
+def loadNewPrograms(config, programs):
+	""""""
+	path = os.path.join(os.path.dirname(__file__), config)
+	allprogs = list()
+	newprogs = list()
+
+	if (os.path.exists(path) and os.path.getsize(path) > 0):
+		xdoc = ET.parse(path)
+		xroot = xdoc.getroot()
+		for xprog in xroot:
+			prog = programFromElement(xprog)
+			allprogs.append(prog)
+	for aprog in allprogs:
+		if (tmfuncs.programAlreadyLoaded(programs, aprog) == False):
+			newprogs.append(aprog)
+	return (newprogs)
+
+
+# def programAlreadyLoaded(programs, program):
+# 	"""Checks if 'program' exists in 'programs'"""
+# 	for prog in programs:
+# 		if (prog == program):
+# 			return (True)
+# 	return (False)
+
 def programExists(program, config):
-	"""Checks if the 'Program' object exists in the xml config file"""
+	"""
+	Checks if the 'Program' object exists in the xml config file.
+	Uses 'Program.progname' to determine equality
+	"""
 	path = os.path.join(os.path.dirname(__file__), config)
 	prog = None
 	xdoc = None
@@ -65,7 +95,8 @@ def programExists(program, config):
 		xroot = xdoc.getroot()
 		for xprog in xroot:
 			prog = programFromElement(xprog)
-			if prog == program:
+			# if prog == program:
+			if (prog.progname == program.progname):
 				return (True)
 	return (False)
 

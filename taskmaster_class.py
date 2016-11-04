@@ -1,4 +1,6 @@
 import cmd
+import signal
+import tmdata
 import tmfuncs
 from tmlog import log
 
@@ -8,7 +10,9 @@ class Taskmaster(cmd.Cmd):
 		""""""
 		cmd.Cmd.__init__(self)
 		self.prompt = "\033[94mTaskmaster>\033[0m "
-		self.programs = list
+		self.programs = list()
+		signal.signal(signal.SIGINT, self.handleSigint)
+		signal.signal(signal.SIGHUP, self.handleSighup)
 		log("Taskmaster object initialized", "./tmlog.txt", False)
 
 	def emptyline(self):
@@ -49,6 +53,8 @@ class Taskmaster(cmd.Cmd):
 				print("No programs")
 				return
 			self.restartPrograms(line.split())
+		elif (line == "reload"):
+			self.reloadConfig()
 #------------------------------------------------------------------------------#
 		elif (line == "-h"):
 			self.do_help(None)
@@ -84,10 +90,104 @@ class Taskmaster(cmd.Cmd):
 				return (False)
 		return (True)
 
+	def reloadConfig(self):
+		""""""
+		cnt = 0
+		rmcnt = 0
+		chcnt = 0
+		chprogs = list()
+		allnewprogs = list()
+		toremove = list()
+		allconfig = tmdata.loadConfig("./config.xml")
+		newprogs = tmdata.loadNewPrograms("./config.xml", self.programs)
+		stopstring = "stop"
+		startstring = "start"
+
+		# removes all programs from 'self.programs' that are no longer present
+		# in the config file
+		for prog in self.programs:
+			if (tmdata.programExists(prog, "./config.xml") == False):
+				rmcnt += 1
+				toremove.append(prog)
+				log("'" + prog.progname + "' no longer in config, removing",
+					"./tmlog.txt", False)
+
+		# this loop checks if a program's variables have changed, and if so,
+		# adds a new Program with changed variables to 'chprogs'
+		for prog in self.programs:
+			chprog = tmfuncs.programChanged(allconfig, prog)
+			if not (chprog == None):
+				chcnt += 1
+				toremove.append(prog)
+				chprogs.append(chprog)
+				log("'" + prog.progname + "' has changed variables, reloading",
+					"./tmlog.txt", False)
+
+		# ensure some sort of change ocurred
+		if (rmcnt == 0 and chcnt == 0 and len(newprogs) == 0):
+			print("No changes to config.")
+			return
+
+		# log the change\s
+		if (len(newprogs) > 0):
+			log(str(len(newprogs)) + " new programs added to config",
+				"./tmlog.txt", True)
+		if (chcnt > 0):
+			log(str(chcnt) + " programs changed in config", "./tmlog.txt", True)
+		if (rmcnt > 0):
+			log(str(rmcnt) + " programs removed from config", "./tmlog.txt",
+				True)
+
+		# stop programs in 'self.programs' that exist in 'toremove'
+		for prog in self.programs:
+			for rprog in toremove:
+				if (rprog == prog):
+					if (prog.hasActiveProcesses() == True):
+						cnt += 1
+						stopstring += " " + prog.progname
+		print("Reloading config file...")
+		if (cnt > 0):
+			# print(stopstrtring)	# should have the format "stop prog1 prog2"
+			self.default(stopstring)
+			# print("Reloading config file...")
+			self.waitForPrograms()
+		cnt = 0
+
+		# remove programs in 'self.programs' that exist in 'toremove'
+		for prog in self.programs:
+			for rprog in toremove:
+				if (prog == rprog):
+					self.programs.remove(prog)
+
+		# adds all changed programs to 'allnewprogs'
+		for prog in chprogs:
+			allnewprogs.append(prog)
+
+		# adds all new programs to 'allnewprogs'
+		for prog in newprogs:
+			allnewprogs.append(prog)
+
+		# adds programs from 'allnewprogs' to 'self.programs' and starts them
+		# if applicable
+		for prog in allnewprogs:
+			self.programs.append(prog)
+			if (prog.autolaunch == True):
+				startstring += " " + prog.progname
+				# prog.runAndMonitor()
+				cnt += 1
+		if (cnt > 0):
+			# print(startstring)	#should have the format "start prog1 prog2"
+			self.default(startstring)
+			# log("Starting " + str(cnt) + " program\s. Please wait...",
+			# 	"./tmlog.txt", True)
+			self.waitForPrograms()
+
+
 	def restartPrograms(self, args):
 		""""""
 		cnt = 1
 		num = 0
+		procs = 0
 		found = False
 
 		if (len(args) == 1):
@@ -97,6 +197,7 @@ class Taskmaster(cmd.Cmd):
 					for proc in prog.processes:
 						if (proc.active == True and proc.pop.returncode == None):
 							proc.stop = True;
+							procs += 1
 							signum = tmfuncs.getSignalValue(prog.stopsig)
 							proc.pop.send_signal(signum)
 							# proc.pop = None #?
@@ -110,6 +211,7 @@ class Taskmaster(cmd.Cmd):
 						if (len(prog.processes) > 0):
 							for proc in prog.processes:
 								if (proc.active == True and proc.pop.returncode == None):
+									procs += 1
 									proc.stop = True
 									signum = tmfuncs.getSignalValue(prog.stopsig)
 									proc.pop.send_signal(signum)
@@ -122,9 +224,9 @@ class Taskmaster(cmd.Cmd):
 				cnt += 1
 		if (self.programsWaiting() == True):
 			log("Restarting " + str(num) + " programs", "./tmlog.txt", False)
-			print("\nRestarting " + str(num) + " programs. Please wait...\n")
-			while self.programsWaiting() == True:
-				continue
+			print("Restarting " + str(num) + " programs. Please wait...")
+			self.waitForPrograms()
+			log(str(procs) + " processes restarted", "./tmlog.txt", True)
 
 	def showStatus(self, args):
 		""""""
@@ -220,8 +322,7 @@ class Taskmaster(cmd.Cmd):
 		if (num > 0):
 			log("Starting " + str(num) + " progam\s", "./tmlog.txt", False)
 			print("Starting " + str(num) + " program\s. Please wait...")
-			while self.programsWaiting() == True:
-				continue
+			self.waitForPrograms()
 			print(str(procs) + " process\es started")
 
 	def stopPrograms(self, args):
@@ -276,8 +377,7 @@ class Taskmaster(cmd.Cmd):
 					cnt += 1
 			if (num > 0):
 				print("Stopping " + str(num) + " program\s. Please wait...")
-				while self.programsWaiting() == True:
-					continue
+				self.waitForPrograms()
 				print(str(procs) + " process\es stopped.")
 			num = 0
 
@@ -290,8 +390,18 @@ class Taskmaster(cmd.Cmd):
 						return (True)
 		return (False)
 
+	def handleSighup(self, signum, frame):
+		""""""
+		if (signum == signal.SIGHUP):
+			log("Reloading config file", "./tmlog.txt", False)
+			self.reloadConfig()
+
 	def handleSigint(self, signum, frame):
 		""""""
 		if (signum == 2):
 			print("")
 			self.do_exit(None)
+
+	def waitForPrograms(self):
+		while self.programsWaiting() == True:
+			continue

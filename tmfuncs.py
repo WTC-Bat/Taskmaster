@@ -26,6 +26,40 @@ def isExecutable(filepath):
 		return (True)
 	return (False)
 
-# def testFileSize(file):
-# 	""""""
-# 	return ()
+
+def programAlreadyLoaded(programList, program):
+	"""
+	Returns True if 'programs' exists in 'programList'.
+	Uses 'Program.progname' to determine equality
+	"""
+	for prog in programList:
+		# if (prog == program):
+		if (prog.progname == program.progname):
+			return (True)
+	return (False)
+
+
+def programChanged(programList, program):
+	"""
+	If the 'program' exists in 'programList' but it's variables
+	have changed, returns a Program object with the new variables.
+	Programs existence is determined using the program's 'progname' element
+	"""
+	for prog in programList:
+		if (prog.progname == program.progname):
+			if not (prog == program):
+				return (prog)
+	return (None)
+
+
+# def programChanged(programList, program):
+# 	"""
+# 	Returns true if the 'program' exists in 'programList' but it's variables
+# 	have changed. Programs existence is determined using the program's
+# 	'progname' element
+# 	"""
+# 	for prog in programList:
+# 		if (prog.progname == program.progname):
+# 			if not (prog == program):
+# 				return (True)
+# 	return (False)

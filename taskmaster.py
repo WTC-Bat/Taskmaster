@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import os
-import signal
 import tmdata
 from taskmaster_class import Taskmaster
 from tmlog import log
@@ -46,11 +45,10 @@ def main():
 	log("TaskMaster started", "./tmlog.txt", False)
 	os.system("clear")
 	log("Loading config file", "./tmlog.txt", False)
-	tm.programs = tmdata.loadConfig(os.path.realpath("./config.xml"))
+	tm.programs = tmdata.loadConfig("./config.xml")
 	log(str(len(tm.programs)) + " programs loaded from config", "./tmlog.txt",
 		False)
 	autolaunchPrograms(tm)
-	signal.signal(signal.SIGINT, tm.handleSigint)#!#
 	tm.cmdloop()
 
 
