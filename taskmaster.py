@@ -15,10 +15,7 @@ class Taskmaster(cmd.Cmd):
 	def __init__(self):
 		""""""
 		cmd.Cmd.__init__(self)
-		if str(platform.system()) != "Windows":
-			self.prompt = "\033[94mTaskmaster>\033[0m "
-		else:
-			self.prompt = "Taskmaster> "
+		self.prompt = "\033[94mTaskmaster>\033[0m "
 		self.programs = list
 		log("Taskmaster object initialized", "./tmlog.txt", False)
 
@@ -26,19 +23,9 @@ class Taskmaster(cmd.Cmd):
 		""""""
 		pass
 
-	def do_hist(self, args):
+	def do_help(self, args):
 		""""""
-		print self._hist
-
-	"""
-	def preloop(self):
-		""""""
-	"""
-
-	"""
-	def postloop(self):
-		""""""
-	"""
+		print("Help:")
 
 	def do_exit(self, args):
 		'''Exits the Taskmaster shell when user inputs "exit"'''
@@ -70,11 +57,15 @@ class Taskmaster(cmd.Cmd):
 				print("No programs")
 				return
 			self.restartPrograms(line.split())
-		# elif (line == "-h" or line == "help"):
-		# 	print("Help:")
-		# elif (line == "clear"):	#tmp
-		# 	for prog in self.programs:
-		# 		prog.clearInactiveProcesses()
+#------------------------------------------------------------------------------#
+		elif (line == "-h"):
+			self.do_help(None)
+		elif (line.startswith("programs")):
+			if (len(self.programs) < 1):
+				print("No programs")
+				return
+			for prog in self.programs:
+				print(prog)
 		else:
 			log("Unknown command: " + line, "./tmlog.txt", True)
 
