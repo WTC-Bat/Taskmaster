@@ -73,10 +73,18 @@ class Process(threading.Thread):
 			log("Stopping process '" + self.name + "'", "./tmlog.txt", False)
 			self.active = False	#?
 			# self.stopping = True
+			if (bool(self.progd["redout"]) == True):
+				self.writeStdOut()
+			if (bool(self.progd["rederr"]) == True):
+				self.writeStdErr()
 			self.stoptimeTimer()
 			return
 		if (self.pop.returncode != None):
 			tim.cancel()
+			if (bool(self.progd["redout"]) == True):
+				self.writeStdOut()
+			if (bool(self.progd["rederr"]) == True):
+				self.writeStdErr()
 			#?
 			self.active = False
 			#?
@@ -152,17 +160,24 @@ class Process(threading.Thread):
 		program's 'stderr' element in the config file
 		"""
 		splt = ""
-		outpath = ""
+		errpath = ""
+		err = None
 
 		if not (self.progd["stderr"]):
-			outpath = "./" + self.progd["progname"] + ".stderr"
+			errpath = "./" + self.progd["progname"] + ".stderr"
 		splt = self.progd["stderr"].split(os.path.sep)
 		if (len(splt) == 1):
-			outpath = "./" + self.progd["stderr"]
+			errpath = "./" + self.progd["stderr"]
 		else:
-			outpath = self.progd["stderr"]
-		with open(outpath, "w") as out:	#with open(outpath, "a") as out:
-			out.write(self.stderr)
+			errpath = self.progd["stderr"]
+		if (os.path.exists(errpath) == False
+			or os.path.getsize(errpath) >= int(self.progd["stderrmax"])):
+			err = open(errpath, "w")
+		else:
+			err = open(errpath, "a")
+		err.write(self.pop.stderr.read())
+		# with open(outpath, "w") as out:	#with open(outpath, "a") as out:
+		# 	out.write(self.stderr)
 
 	def writeStdOut(self):
 		"""
@@ -172,7 +187,6 @@ class Process(threading.Thread):
 		splt = ""
 		outpath = ""
 
-		print("Write: " + self.name) #
 		if not (self.progd["stdout"]):
 			outpath = "./" + self.progd["progname"] + ".stdout"
 		splt = self.progd["stdout"].split(os.path.sep)
@@ -180,7 +194,10 @@ class Process(threading.Thread):
 			outpath = "./" + self.progd["stdout"]
 		else:
 			outpath = self.progd["stdout"]
-		with open(outpath, "w") as out:	#with open(outpath, "a") as out:
-			# out.write(self.stdout)
-			# out.write(self.pop.stdout.readline())
-			out.write(self.pop.stdout.read())
+
+		if (os.path.exists(outpath) == False
+				or os.path.getsize(outpath) >= int(self.progd["stdoutmax"])):
+			out = open(outpath, "w")
+		else:
+			out = open(outpath, "a")
+		out.write(self.pop.stdout.read())
