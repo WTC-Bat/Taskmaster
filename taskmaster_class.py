@@ -20,7 +20,21 @@ class Taskmaster(cmd.Cmd):
 
 	def do_help(self, args):
 		"""Display Taskmaster help and commands"""
-		print("Help:")
+		print("-h:")
+		print("help:\n\tshow these commands")
+		print("programs:\n\tprint a list of loaded programs\n")
+		print("reload:\n\treload config file new/changed "
+				+ "programs\n")
+		print("restart:\n\trestart all programs, active or inactive\n")
+		print("restart [progName1] [progName2] [...]:\n\trestart programs "
+				+ "'progName1' and 'progName2', active or inactive\n")
+		print("status:\n\tshow the status of all loaded programs\n")
+		print("start [progName1] [progName] [...]:\n\tstart programs "
+				+ "'progName1' and 'progName2' if they are inactive\n")
+		print("start all:\n\tstart all inactive programs\n")
+		print("stop [progName1] [progName2] [...]:\n\tstop programs 'progName1'"
+				+ " and 'progName2' if they are active\n")
+		print("stop all:\n\tstop all active programs\n")
 
 	def do_exit(self, args):
 		'''Exits the Taskmaster shell when user inputs "exit"'''
