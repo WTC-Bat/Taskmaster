@@ -73,14 +73,6 @@ def loadNewPrograms(config, programs):
 			newprogs.append(aprog)
 	return (newprogs)
 
-
-# def programAlreadyLoaded(programs, program):
-# 	"""Checks if 'program' exists in 'programs'"""
-# 	for prog in programs:
-# 		if (prog == program):
-# 			return (True)
-# 	return (False)
-
 def programExists(program, config):
 	"""
 	Checks if the 'Program' object exists in the xml config file.

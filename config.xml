@@ -25,7 +25,7 @@
 		<retries>2</retries>
 		<!-- True to redirect stdout to a file. False to ignore output -->
 		<!-- See: 'stdout' -->
-		<redout>True</redout>
+		<redout>False</redout>
 		<!-- File to write stdout to if 'redout' is True -->
 		<stdout>/tmp/whoami.stdout</stdout>
 		<!-- Maximum number of bytes to write to file from program's stdout -->
@@ -50,7 +50,7 @@
 		<!-- True to redirect stderr to a file. False to ignore error output -->
 		<rederr>False</rederr>
 		<!-- Maximum number of bytes to write to file from program's stderr -->
-		<stderrmax>1000000</stderrmax>
+		<stderrmax>100000</stderrmax>
 		<!-- How many processes to launch the program with -->
 		<procnum>1</procnum>
 		<!-- How long to wait before deeming the program started -->
@@ -88,7 +88,7 @@
 		<command>/usr/bin/top</command>
 		<stderr>top.stderr</stderr>
 		<rederr>False</rederr>
-		<stderrmax>1000000</stderrmax>
+		<stderrmax>100000</stderrmax>
 		<procnum>3</procnum>
 		<starttime>5</starttime>
 		<restart>always</restart>
@@ -120,7 +120,7 @@
 		<command>/usr/bin/who</command>
 		<stderr>who.stderr</stderr>
 		<rederr>False</rederr>
-		<stderrmax>100</stderrmax>
+		<stderrmax>1000</stderrmax>
 		<procnum>1</procnum>
 		<starttime>5</starttime>
 		<restart>never</restart>

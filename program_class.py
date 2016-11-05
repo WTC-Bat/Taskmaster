@@ -31,7 +31,7 @@ class Program():
 		self.stdoutmax = 2
 		self.stderrmax = 2
 		self.processes = list()
-		self.tmexit = False
+		# self.tmexit = False
 
 		if type(args) is dict:
 			for key, val in args.iteritems():

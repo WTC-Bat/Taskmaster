@@ -39,10 +39,6 @@ class Process(threading.Thread):
 		if (len(self.progd["envvars"]) > 0):
 			envs = self.progd["envvars"]
 		try:
-			# self.pop = subprocess.Popen(args, stderr=subprocess.PIPE,
-			# 							stdout=subprocess.PIPE)
-			# self.pop = subprocess.Popen(args, cwd=wkdir, stderr=subprocess.PIPE,
-			# 							stdout=subprocess.PIPE, env=envs)
 			self.pop = subprocess.Popen(args, cwd=wkdir, stderr=subprocess.PIPE,
 										stdout=subprocess.PIPE, env=envs,
 										preexec_fn=self.initializeProcess)
@@ -52,6 +48,11 @@ class Process(threading.Thread):
 			log("Caught exception '" + str(e) + "'", "./tmlog.txt", False)
 			return
 
+		# print("STARTING: " + self.progd["progname"])
+		# wait = self.stopping or self.starting
+		# while wait == True:
+		# 	wait = self.stopping or self.starting
+		# 	continue
 		self.stop = False
 		self.active = True
 		if (int(self.progd["starttime"]) > 0):
@@ -73,20 +74,20 @@ class Process(threading.Thread):
 			log("Stopping process '" + self.name + "'", "./tmlog.txt", False)
 			self.active = False	#?
 			# self.stopping = True
-			# if (bool(self.progd["redout"]) == True):
-			# 	self.writeStdOut()
-			# if (bool(self.progd["rederr"]) == True):
-			# 	self.writeStdErr()
+			if (bool(self.progd["redout"]) == True):
+				self.writeStdOut()
+			if (bool(self.progd["rederr"]) == True):
+				self.writeStdErr()
 			self.stoptimeTimer()
 			return
 		if (self.pop.returncode != None):
 			tim.cancel()
-			# if (bool(self.progd["redout"]) == True):
-			# 	self.writeStdOut()
-			# if (bool(self.progd["rederr"]) == True):
-			# 	self.writeStdErr()
+			if (bool(self.progd["redout"]) == True):
+				self.writeStdOut()
+			if (bool(self.progd["rederr"]) == True):
+				self.writeStdErr()
 			#?
-			self.active = False
+			# self.active = False
 			#?
 			if (self.progd["restart"] == "always"):
 				self.run()
@@ -100,7 +101,11 @@ class Process(threading.Thread):
 					self.run()
 					log("Attempting to relaunch '" + self.name + "'",
 						"./tmlog.txt", False)
-					log("Retries: " + str(self.retries))
+					log("Retries: " + str(self.retries), "./tmlog.txt", False)
+				else:
+					self.active = False
+			else:
+				self.active = False
 
 	def expectedReturnCode(self):
 		"""
@@ -130,29 +135,21 @@ class Process(threading.Thread):
 		tim.start()
 		if (self.timetostart < int(self.progd["starttime"])):
 			self.timetostart += 1
-		if (self.timetostart == int(self.progd["starttime"])):
+		if (self.timetostart >= int(self.progd["starttime"])):
 			tim.cancel()
-			# self.started = True
-			self.timetostart = 0
-			# self.active = True
 			self.starting = False
 			self.monitor()
-			# tim.cancel()
 
 	def stoptimeTimer(self):
 		""""""
-		# self.stopping = True
 		tim = threading.Timer(1.0, self.stoptimeTimer)
 		tim.start()
 		if (self.timetostop < int(self.progd["stoptime"])):
 			self.timetostop += 1
-		if (self.timetostop == int(self.progd["stoptime"])):
+		if (self.timetostop >= int(self.progd["stoptime"])):
 			tim.cancel()
-			# self.stopped = True
 			self.timetostop = 0
-			# self.active = False #?
 			self.stopping = False
-			# tim.cancel()
 
 	def writeStdErr(self):
 		"""
@@ -176,8 +173,6 @@ class Process(threading.Thread):
 		else:
 			err = open(errpath, "a")
 		err.write(self.pop.stderr.read())
-		# with open(outpath, "w") as out:	#with open(outpath, "a") as out:
-		# 	out.write(self.stderr)
 
 	def writeStdOut(self):
 		"""

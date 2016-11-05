@@ -90,6 +90,29 @@ class Taskmaster(cmd.Cmd):
 				return (False)
 		return (True)
 
+	def autolaunchPrograms(self):
+		""""""
+		cnt = 0
+		totnum = 0
+
+		if (len(self.programs) == 0):
+			log("WARNING: No programs in config file", "./tmlog.txt", True)
+			return
+		for prog in self.programs:
+			if (prog.autolaunch == True):
+				totnum += prog.runAndMonitor()
+				cnt += 1
+				log("Starting " + prog.progname, "./tmlog.txt", False)
+		if (cnt > 0):
+			print("Taskmaster is starting autolaunch programs. Please wait...")
+			# while self.programsWaiting() == True:
+			# 	continue
+			self.waitForPrograms()
+			log(str(totnum) + " processes (" + str(cnt) + " program\s) successfully"
+				+ " launched",	"./tmlog.txt", True)
+		else:
+			log("No programs set to launch automatically", "./tmlog.txt", True)
+
 	def reloadConfig(self):
 		""""""
 		cnt = 0
@@ -141,7 +164,8 @@ class Taskmaster(cmd.Cmd):
 		# stop programs in 'self.programs' that exist in 'toremove'
 		for prog in self.programs:
 			for rprog in toremove:
-				if (rprog == prog):
+				# if (rprog == prog):
+				if (rprog.progname == prog.progname):
 					if (prog.hasActiveProcesses() == True):
 						cnt += 1
 						stopstring += " " + prog.progname
@@ -194,13 +218,14 @@ class Taskmaster(cmd.Cmd):
 			num = len(self.programs)
 			for prog in self.programs:
 				if (len(prog.processes) > 0):
+					procs += len(prog.processes)
 					for proc in prog.processes:
 						if (proc.active == True and proc.pop.returncode == None):
 							proc.stop = True;
-							procs += 1
 							signum = tmfuncs.getSignalValue(prog.stopsig)
 							proc.pop.send_signal(signum)
 							# proc.pop = None #?
+						proc.timetostart = 0
 						proc.run()
 		elif (len(args) > 1):
 			while cnt < len(args):
@@ -209,13 +234,14 @@ class Taskmaster(cmd.Cmd):
 						found = True
 						num += 1
 						if (len(prog.processes) > 0):
+							procs += len(prog.processes)
 							for proc in prog.processes:
 								if (proc.active == True and proc.pop.returncode == None):
-									procs += 1
 									proc.stop = True
 									signum = tmfuncs.getSignalValue(prog.stopsig)
 									proc.pop.send_signal(signum)
 									# proc.pop = None #?
+								proc.timetostart = 0
 								proc.run()
 				if (found == False):
 					log("No program '" + args[cnt] + "' in config",
@@ -293,8 +319,9 @@ class Taskmaster(cmd.Cmd):
 						for proc in prog.processes:
 							if (proc.active == False):
 								procs += 1
+								proc.timetostart = 0
 								proc.run()
-					else:
+					else:	# for programs not yet launched
 						procs = prog.runAndMonitor()
 			else:
 				while cnt < len(args):
@@ -311,6 +338,7 @@ class Taskmaster(cmd.Cmd):
 								for proc in prog.processes:
 									if (proc.active == False):
 										procs += 1
+										proc.timetostart = 0
 										proc.run()
 							else:
 								procs = prog.runAndMonitor()
@@ -345,7 +373,8 @@ class Taskmaster(cmd.Cmd):
 				for prog in self.programs:
 					if (len(prog.processes) > 0):
 						for proc in prog.processes:
-							if (proc.active == True):
+							# if (proc.active == True):
+							if (proc.active == True and proc.pop.returncode == None):
 								proc.stop = True
 								proc.stopping = True
 								signum = tmfuncs.getSignalValue(prog.stopsig)
@@ -363,7 +392,8 @@ class Taskmaster(cmd.Cmd):
 							num += 1
 							if (len(prog.processes) > 0):
 								for proc in prog.processes:
-									if (proc.active == True):
+									# if (proc.active == True):
+									if (proc.active == True and proc.pop.returncode == None):
 										proc.stop = True
 										proc.stopping = True
 										signum = tmfuncs.getSignalValue(
