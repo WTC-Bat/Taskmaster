@@ -48,6 +48,7 @@ def programChanged(programList, program):
 	for prog in programList:
 		if (prog.progname == program.progname):
 			if not (prog == program):
+			# if not (prog.progname == program.progname):	# this won't work as the program name shouldn't change
 				return (prog)
 	return (None)
 

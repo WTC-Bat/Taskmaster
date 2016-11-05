@@ -140,6 +140,7 @@ class Taskmaster(cmd.Cmd):
 		for prog in self.programs:
 			chprog = tmfuncs.programChanged(allconfig, prog)
 			if not (chprog == None):
+				print(prog.progname + " CHANGED")
 				chcnt += 1
 				toremove.append(prog)
 				chprogs.append(chprog)
@@ -161,6 +162,11 @@ class Taskmaster(cmd.Cmd):
 			log(str(rmcnt) + " programs removed from config", "./tmlog.txt",
 				True)
 
+		#!TEST!
+		for prog in toremove:
+			print(prog.progname)
+		#!TEST!
+
 		# stop programs in 'self.programs' that exist in 'toremove'
 		for prog in self.programs:
 			for rprog in toremove:
@@ -169,6 +175,7 @@ class Taskmaster(cmd.Cmd):
 					if (prog.hasActiveProcesses() == True):
 						cnt += 1
 						stopstring += " " + prog.progname
+
 		print("Reloading config file...")
 		if (cnt > 0):
 			# print(stopstrtring)	# should have the format "stop prog1 prog2"
@@ -177,11 +184,18 @@ class Taskmaster(cmd.Cmd):
 			self.waitForPrograms()
 		cnt = 0
 
+		#!TEST!
+		print("toremove:")
+		for prog in toremove:
+			print (prog.progname)
+		#!TEST!
+
 		# remove programs in 'self.programs' that exist in 'toremove'
 		for prog in self.programs:
 			for rprog in toremove:
 				# if (prog == rprog):
 				if (rprog.progname == prog.progname):
+					print("removing " + prog.progname) #???
 					self.programs.remove(prog)
 
 		# adds all changed programs to 'allnewprogs'

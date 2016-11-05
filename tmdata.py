@@ -180,7 +180,7 @@ def removeProgam(program, config):
 		for xprog in xroot:
 			prog = programFromElement(xprog)
 			# if prog == program:
-			if (prog.progname == program.progname)
+			if (prog.progname == program.progname):
 				xroot.remove(xprog)
 				xdoc.write(path, encoding="utf-8", xml_declaration=True)
 				return

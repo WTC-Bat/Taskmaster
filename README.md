@@ -14,8 +14,17 @@ Problem when a third program is added to config!? Could be my osx vm (memory)
 	seems to be attributed to "restart == always". Need to check
 	timer/monitor loops
 
+
+
 Problems with reload. Check equality checks in taskmaster.py->reloadConfig(),
 	and maybe use 'prog.progname' instead of 'prog' == 'prog2'
+		|
+		V
+	Check starting new programs in reload. Duplicates are created. Could be
+		that changed programs are not being removed properly
+											^
+											|
+											It's this!
 
 ### TODO:
 	- Logging

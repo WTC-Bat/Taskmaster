@@ -65,9 +65,9 @@ class Program():
 					self.redout = val
 				elif key == "rederr":
 					self.rederr = val
-				elif (key == "stdoutmax"):
+				elif key == "stdoutmax":
 					self.stdoutmax = int(val)
-				elif (key == "stderrmax"):
+				elif key == "stderrmax":
 					self.stderrmax = int(val)
 				elif type(val) is dict and key == "envvars":
 					self.envvars = dict();
@@ -89,23 +89,13 @@ class Program():
 				.format(self.progname, self.command, self.procnum,
 						self.autolaunch, self.starttime, self.restart,
 						self.retries, self.stopsig, self.stoptime,
-						self.exitcodes, self.stdout, self.stderr, self.redout,
-						self.rederr, self.stdoutmax, self.stderrmax,
-						self.envvars, self.workingdir, self.umask)
+						self.exitcodes, self.stdout, self.stderr,
+						self.stdoutmax, self.stderrmax, self.redout,
+						self.rederr, self.envvars, self.workingdir, self.umask)
 
 	def __eq__(self, obj):
 		""""""
 		return (str(self) == str(obj))
-
-	# def clearInactiveProcesses(self):
-	# 	""""""
-	# 	for proc in self.processes:
-	# 		if (proc.active == False):
-	# 			self.processes.remove(proc)
-
-	# def removeProcess(process):
-	# 	""""""
-	# 	self.processes.remove(process)
 
 	def hasActiveProcesses(self):
 		""""""
