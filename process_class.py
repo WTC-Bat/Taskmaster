@@ -76,7 +76,6 @@ class Process(threading.Thread):
 			if (bool(self.progd["rederr"]) == True):
 				self.writeStdErr()
 			self.stoptimeTimer()
-			#
 			return
 		if (self.pop.returncode != None):
 			tim.cancel()
@@ -87,7 +86,6 @@ class Process(threading.Thread):
 			if (self.progd["restart"] == "always"):
 				log("Process '" + self.name + "' stopped", "./tmlog.txt", False)
 				self.run()
-				# log("Restarting '" + self.name + "'", "./tmlog.txt", False)
 			elif (self.progd["restart"] == "unexpected"):
 				if (self.expectedReturnCode() == False
 						and self.retries != int(self.progd["retries"])):
@@ -146,7 +144,6 @@ class Process(threading.Thread):
 			tim.cancel()
 			self.timetostop = 0
 			self.stopping = False
-			# self.active = False
 
 	def writeStdErr(self):
 		"""

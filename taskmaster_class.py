@@ -13,7 +13,6 @@ class Taskmaster(cmd.Cmd):
 		self.programs = list()
 		signal.signal(signal.SIGINT, self.handleSigint)
 		signal.signal(signal.SIGHUP, self.handleSighup)
-		# log("Taskmaster object initialized", "./tmlog.txt", False)
 
 	def emptyline(self):
 		"""If the input line is empty, continue and show prompt"""
@@ -109,8 +108,6 @@ class Taskmaster(cmd.Cmd):
 			if (tmdata.programExists(prog, "./config.xml") == False):
 				rmcnt += 1
 				toremove.append(prog)
-				# log("'" + prog.progname + "' no longer in config, removing",
-				# 	"./tmlog.txt", False)
 
 		# this loop checks if a program's variables have changed, and if so,
 		# adds a new Program with changed variables to 'chprogs'
@@ -120,8 +117,6 @@ class Taskmaster(cmd.Cmd):
 				chcnt += 1
 				toremove.append(prog)
 				chprogs.append(chprog)
-				# log("'" + prog.progname + "' has changed variables, reloading",
-				# 	"./tmlog.txt", False)
 
 		# ensure some sort of change ocurred
 		if (rmcnt == 0 and chcnt == 0 and len(newprogs) == 0):
@@ -179,7 +174,6 @@ class Taskmaster(cmd.Cmd):
 			self.default(startstring)
 			self.waitForPrograms()
 
-
 	def restartPrograms(self, args):
 		""""""
 		cnt = 1
@@ -197,7 +191,6 @@ class Taskmaster(cmd.Cmd):
 							proc.stop = True;
 							signum = tmfuncs.getSignalValue(prog.stopsig)
 							proc.pop.send_signal(signum)
-							# proc.pop = None #?
 						proc.timetostart = 0
 						proc.run()
 		elif (len(args) > 1):
@@ -213,7 +206,6 @@ class Taskmaster(cmd.Cmd):
 									proc.stop = True
 									signum = tmfuncs.getSignalValue(prog.stopsig)
 									proc.pop.send_signal(signum)
-									# proc.pop = None #?
 								proc.timetostart = 0
 								proc.run()
 				if (found == False):
@@ -346,7 +338,6 @@ class Taskmaster(cmd.Cmd):
 				for prog in self.programs:
 					if (len(prog.processes) > 0):
 						for proc in prog.processes:
-							# if (proc.active == True):
 							if (proc.active == True and proc.pop.returncode == None):
 								proc.stop = True
 								proc.stopping = True
@@ -365,7 +356,6 @@ class Taskmaster(cmd.Cmd):
 							num += 1
 							if (len(prog.processes) > 0):
 								for proc in prog.processes:
-									# if (proc.active == True):
 									if (proc.active == True and proc.pop.returncode == None):
 										proc.stop = True
 										proc.stopping = True

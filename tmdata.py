@@ -8,7 +8,7 @@ from program_class import Program
 
 
 def checkProgramCommand(program):
-	""""""
+	"""Returns True if 'program's' command is valid. Otherwise returns False"""
 	cmd = ""
 	path = ""
 	for pth in os.environ["PATH"].split(os.pathsep):
@@ -50,7 +50,6 @@ def loadConfig(config):
 			else:
 				log("'" + prog.progname + "' command invalid. Not loading",
 					"./tmlog.txt", True)
-			# progs.append(prog)
 	else:
 		log("Config file not found or is empty", "./tmlog.txt", True)
 	return (progs)
@@ -87,7 +86,6 @@ def programExists(program, config):
 		xroot = xdoc.getroot()
 		for xprog in xroot:
 			prog = programFromElement(xprog)
-			# if prog == program:
 			if (prog.progname == program.progname):
 				return (True)
 	return (False)
@@ -134,17 +132,11 @@ def programFromElement(progel):
 				prog.redout = True
 			else:
 				prog.redout = False
-			# prog.redout = bool(el.text)
 		elif el.tag == "rederr":
 			if (el.text == "True"):
 				prog.rederr = True
 			else:
 				prog.rederr = False
-			# prog.rederr = bool(el.text)
-		# elif el.tag == "redout":
-		# 	prog.redout = el.text
-		# elif el.tag == "rederr":
-		# 	prog.rederr = el.text
 		elif (el.tag == "stdoutmax"):
 			prog.stdoutmax = int(el.text)
 		elif (el.tag == "stderrmax"):
@@ -164,8 +156,6 @@ def programFromElement(progel):
 			prog.workingdir = el.text
 		elif el.tag == "umask":
 			prog.umask = el.text
-	# print("redout - " + prog.progname + " - " + str(prog.redout))
-	# print("rederr - " + prog.progname + " - " + str(prog.rederr))
 	return (prog)
 
 
@@ -179,7 +169,6 @@ def removeProgam(program, config):
 		xroot = xdoc.getroot()
 		for xprog in xroot:
 			prog = programFromElement(xprog)
-			# if prog == program:
 			if (prog.progname == program.progname):
 				xroot.remove(xprog)
 				xdoc.write(path, encoding="utf-8", xml_declaration=True)
@@ -199,16 +188,9 @@ def saveProgram(program, config, overwrite):
 	xroot = None
 	xel = None
 
-	#	if two programs with the same command are not allowed, then we just
-	#	need to check if two objects have the same command. At the moment,
-	#	two objects will only be equal if all members are the same. Moreover,
-	#	this also renders replacing program entries pointless
 	if programExists(program, config):
 		if overwrite == False:
 			return
-		## else:
-			## replace xml entry
-			## return
 	path = os.path.join(os.path.dirname(__file__), config)
 	if not os.path.exists(path):
 		f = open(path, "w")

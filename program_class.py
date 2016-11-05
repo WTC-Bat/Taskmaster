@@ -76,7 +76,6 @@ class Program():
 					self.workingdir = val
 				elif key == "umask":
 					self.umask = val
-			# log("Program '" + self.progname + "' initialized", "./tmlog.txt", False)
 
 	def __str__(self):
 		""""""
@@ -120,7 +119,5 @@ class Program():
 			proc = procc.Process(self.__dict__)
 			self.processes.append(proc)
 			proc.run()
-			# log("Program '" + self.progname + "' process starting", "./tmlog.txt",
-			# 	False)
 			num += 1
 		return (num)
