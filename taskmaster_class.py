@@ -180,7 +180,8 @@ class Taskmaster(cmd.Cmd):
 		# remove programs in 'self.programs' that exist in 'toremove'
 		for prog in self.programs:
 			for rprog in toremove:
-				if (prog == rprog):
+				# if (prog == rprog):
+				if (rprog.progname == prog.progname):
 					self.programs.remove(prog)
 
 		# adds all changed programs to 'allnewprogs'
