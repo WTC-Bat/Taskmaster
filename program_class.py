@@ -31,7 +31,6 @@ class Program():
 		self.stdoutmax = 2
 		self.stderrmax = 2
 		self.processes = list()
-		# self.tmexit = False
 
 		if type(args) is dict:
 			for key, val in args.iteritems():
@@ -77,7 +76,7 @@ class Program():
 					self.workingdir = val
 				elif key == "umask":
 					self.umask = val
-			log("Program '" + self.progname + "' initialized", "./tmlog.txt", False)
+			# log("Program '" + self.progname + "' initialized", "./tmlog.txt", False)
 
 	def __str__(self):
 		""""""
@@ -120,9 +119,8 @@ class Program():
 		while num < self.procnum:
 			proc = procc.Process(self.__dict__)
 			self.processes.append(proc)
-			# proc.start()
 			proc.run()
-			log("Program '" + self.progname + "' process starting", "./tmlog.txt",
-				False)
+			# log("Program '" + self.progname + "' process starting", "./tmlog.txt",
+			# 	False)
 			num += 1
 		return (num)

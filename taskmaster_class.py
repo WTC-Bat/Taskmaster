@@ -5,22 +5,22 @@ import tmfuncs
 from tmlog import log
 
 class Taskmaster(cmd.Cmd):
-	""""""
+	"""Main program class. Handles input and cmdloop"""
 	def __init__(self):
-		""""""
+		"""'Taskmaster' constructor"""
 		cmd.Cmd.__init__(self)
 		self.prompt = "\033[94mTaskmaster>\033[0m "
 		self.programs = list()
 		signal.signal(signal.SIGINT, self.handleSigint)
 		signal.signal(signal.SIGHUP, self.handleSighup)
-		log("Taskmaster object initialized", "./tmlog.txt", False)
+		# log("Taskmaster object initialized", "./tmlog.txt", False)
 
 	def emptyline(self):
-		""""""
+		"""If the input line is empty, continue and show prompt"""
 		pass
 
 	def do_help(self, args):
-		""""""
+		"""Display Taskmaster help and commands"""
 		print("Help:")
 
 	def do_exit(self, args):
@@ -90,29 +90,6 @@ class Taskmaster(cmd.Cmd):
 				return (False)
 		return (True)
 
-	def autolaunchPrograms(self):
-		""""""
-		cnt = 0
-		totnum = 0
-
-		if (len(self.programs) == 0):
-			log("WARNING: No programs in config file", "./tmlog.txt", True)
-			return
-		for prog in self.programs:
-			if (prog.autolaunch == True):
-				totnum += prog.runAndMonitor()
-				cnt += 1
-				log("Starting " + prog.progname, "./tmlog.txt", False)
-		if (cnt > 0):
-			print("Taskmaster is starting autolaunch programs. Please wait...")
-			# while self.programsWaiting() == True:
-			# 	continue
-			self.waitForPrograms()
-			log(str(totnum) + " processes (" + str(cnt) + " program\s) successfully"
-				+ " launched",	"./tmlog.txt", True)
-		else:
-			log("No programs set to launch automatically", "./tmlog.txt", True)
-
 	def reloadConfig(self):
 		""""""
 		cnt = 0
@@ -132,20 +109,19 @@ class Taskmaster(cmd.Cmd):
 			if (tmdata.programExists(prog, "./config.xml") == False):
 				rmcnt += 1
 				toremove.append(prog)
-				log("'" + prog.progname + "' no longer in config, removing",
-					"./tmlog.txt", False)
+				# log("'" + prog.progname + "' no longer in config, removing",
+				# 	"./tmlog.txt", False)
 
 		# this loop checks if a program's variables have changed, and if so,
 		# adds a new Program with changed variables to 'chprogs'
 		for prog in self.programs:
 			chprog = tmfuncs.programChanged(allconfig, prog)
 			if not (chprog == None):
-				print(prog.progname + " CHANGED")
 				chcnt += 1
 				toremove.append(prog)
 				chprogs.append(chprog)
-				log("'" + prog.progname + "' has changed variables, reloading",
-					"./tmlog.txt", False)
+				# log("'" + prog.progname + "' has changed variables, reloading",
+				# 	"./tmlog.txt", False)
 
 		# ensure some sort of change ocurred
 		if (rmcnt == 0 and chcnt == 0 and len(newprogs) == 0):
@@ -162,11 +138,6 @@ class Taskmaster(cmd.Cmd):
 			log(str(rmcnt) + " programs removed from config", "./tmlog.txt",
 				True)
 
-		#!TEST!
-		for prog in toremove:
-			print(prog.progname)
-		#!TEST!
-
 		# stop programs in 'self.programs' that exist in 'toremove'
 		for prog in self.programs:
 			for rprog in toremove:
@@ -176,26 +147,17 @@ class Taskmaster(cmd.Cmd):
 						cnt += 1
 						stopstring += " " + prog.progname
 
+		# stop runnuing processes
 		print("Reloading config file...")
 		if (cnt > 0):
-			# print(stopstrtring)	# should have the format "stop prog1 prog2"
 			self.default(stopstring)
-			# print("Reloading config file...")
 			self.waitForPrograms()
 		cnt = 0
 
-		#!TEST!
-		print("toremove:")
-		for prog in toremove:
-			print (prog.progname)
-		#!TEST!
-
 		# remove programs in 'self.programs' that exist in 'toremove'
-		for prog in self.programs:
-			for rprog in toremove:
-				# if (prog == rprog):
-				if (rprog.progname == prog.progname):
-					print("removing " + prog.progname) #???
+		for rprog in toremove:
+			for prog in self.programs:
+				if (prog.progname == rprog.progname):
 					self.programs.remove(prog)
 
 		# adds all changed programs to 'allnewprogs'
@@ -212,13 +174,9 @@ class Taskmaster(cmd.Cmd):
 			self.programs.append(prog)
 			if (prog.autolaunch == True):
 				startstring += " " + prog.progname
-				# prog.runAndMonitor()
 				cnt += 1
 		if (cnt > 0):
-			# print(startstring)	#should have the format "start prog1 prog2"
 			self.default(startstring)
-			# log("Starting " + str(cnt) + " program\s. Please wait...",
-			# 	"./tmlog.txt", True)
 			self.waitForPrograms()
 
 
@@ -337,7 +295,7 @@ class Taskmaster(cmd.Cmd):
 								proc.timetostart = 0
 								proc.run()
 					else:	# for programs not yet launched
-						procs = prog.runAndMonitor()
+						procs += prog.runAndMonitor()
 			else:
 				while cnt < len(args):
 					for prog in self.programs:
@@ -356,7 +314,7 @@ class Taskmaster(cmd.Cmd):
 										proc.timetostart = 0
 										proc.run()
 							else:
-								procs = prog.runAndMonitor()
+								procs += prog.runAndMonitor()
 					if (found == False):
 						log("No program '" + args[cnt] + "' in config",
 							"./tmlog.txt", True)

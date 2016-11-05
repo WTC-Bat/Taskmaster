@@ -15,9 +15,9 @@ def autolaunchPrograms(taskmaster):
 		return
 	for program in taskmaster.programs:
 		if (program.autolaunch == True):
+			log("Starting " + program.progname, "./tmlog.txt", False)
 			totnum += program.runAndMonitor()
 			cnt += 1
-			log("Starting " + program.progname, "./tmlog.txt", False)
 	if (cnt > 0):
 		print("Taskmaster is starting autolaunch programs. Please wait...")
 		while taskmaster.programsWaiting() == True:

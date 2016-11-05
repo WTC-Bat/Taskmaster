@@ -30,7 +30,7 @@
 		<stdout>/tmp/whoami.stdout</stdout>
 		<!-- Maximum number of bytes to write to file from program's stdout -->
 		<!-- 1000000 bytes == 1 megabyte -->
-		<stdoutmax>10000</stdoutmax>
+		<stdoutmax>1000</stdoutmax>
 		<!-- Working directory to set when launching the program -->
 		<workingdir>/tmp</workingdir>
 		<!-- Umask to set when launching the program -->
@@ -78,7 +78,7 @@
 		<retries>2</retries>
 		<redout>False</redout>
 		<stdout>top.stdout</stdout>
-		<stdoutmax>1000</stdoutmax>
+		<stdoutmax>10000</stdoutmax>
 		<workingdir></workingdir>
 		<umask>022</umask>
 		<progname>top</progname>
@@ -110,7 +110,7 @@
 		<retries>2</retries>
 		<redout>False</redout>
 		<stdout>who.stdout</stdout>
-		<stdoutmax>1000</stdoutmax>
+		<stdoutmax>10000</stdoutmax>
 		<workingdir></workingdir>
 		<umask>022</umask>
 		<progname>who</progname>
@@ -123,7 +123,7 @@
 		<stderrmax>1000</stderrmax>
 		<procnum>1</procnum>
 		<starttime>5</starttime>
-		<restart>never</restart>
+		<restart>always</restart>
 		<exitcodes>
 			<code>0</code>
 		</exitcodes>
