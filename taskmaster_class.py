@@ -86,6 +86,7 @@ class Taskmaster(cmd.Cmd):
 	def cmdloop(self):
 		""""""
 		self.registerProgramSignals()
+		cmd.Cmd.cmdloop(self)
 
 	def activePrograms(self):
 		"""Return the amount of programs with active processes"""
@@ -210,8 +211,9 @@ class Taskmaster(cmd.Cmd):
 					for proc in prog.processes:
 						if (proc.active == True and proc.pop.returncode == None):
 							proc.stop = True;
-							signum = tmfuncs.getSignalValue(prog.stopsig)
-							proc.pop.send_signal(signum)
+							# signum = tmfuncs.getSignalValue(prog.stopsig)
+							# proc.pop.send_signal(signum)
+							proc.pop.send_signal(signal.SIGTERM)
 						proc.timetostart = 0
 						proc.run()
 		elif (len(args) > 1):
@@ -225,8 +227,9 @@ class Taskmaster(cmd.Cmd):
 							for proc in prog.processes:
 								if (proc.active == True and proc.pop.returncode == None):
 									proc.stop = True
-									signum = tmfuncs.getSignalValue(prog.stopsig)
-									proc.pop.send_signal(signum)
+									# signum = tmfuncs.getSignalValue(prog.stopsig)
+									# proc.pop.send_signal(signum)
+									proc.pop.send_signal(signal.SIGTERM)
 								proc.timetostart = 0
 								proc.run()
 				if (found == False):
@@ -362,8 +365,9 @@ class Taskmaster(cmd.Cmd):
 							if (proc.active == True and proc.pop.returncode == None):
 								proc.stop = True
 								proc.stopping = True
-								signum = tmfuncs.getSignalValue(prog.stopsig)
-								proc.pop.send_signal(signum)
+								# signum = tmfuncs.getSignalValue(prog.stopsig)
+								# proc.pop.send_signal(signum)
+								proc.pop.send_signal(signal.SIGTERM)
 								procs += 1
 			else:
 				while cnt < len(args):
@@ -380,9 +384,10 @@ class Taskmaster(cmd.Cmd):
 									if (proc.active == True and proc.pop.returncode == None):
 										proc.stop = True
 										proc.stopping = True
-										signum = tmfuncs.getSignalValue(
-													prog.stopsig)
-										proc.pop.send_signal(signum)
+										# signum = tmfuncs.getSignalValue(
+										# 			prog.stopsig)
+										# proc.pop.send_signal(signum)
+										proc.pop.send_signal(signal.SIGTERM)
 										procs += 1
 					if (found == False):
 						log("No program '" + args[cnt] + "' in config",
@@ -406,6 +411,7 @@ class Taskmaster(cmd.Cmd):
 
 	def registerProgramSignals(self):
 		""""""
+		print("registering signals")
 		for prog in self.programs:
 			signum = tmfuncs.getSignalValue(prog.stopsig)
 			if not (signum == -42):
@@ -414,13 +420,16 @@ class Taskmaster(cmd.Cmd):
 	def handleProgramSignals(self, signum, frame):
 		""""""
 		for prog in self.programs:
-			if (tmfuncs.getSignalValue(prog.sigstop) == signum):
-				log(prog.progname + " recieved signal " + str(signum),
-					"./tmlog.txt", True)
-				for proc in prog.processes:
-					proc.stop = True
-					proc.stopping = True
-					proc.pop.send_signal(signal.SIGTERM)
+			if (tmfuncs.getSignalValue(prog.stopsig) == signum):
+				print("")
+				log("Programs '" + prog.progname + "' recieved signal "
+					+ str(signum), "./tmlog.txt", True)
+				self.default("stop " + prog.progname)
+				# for proc in prog.processes:
+				# 	proc.stop = True
+				# 	proc.stopping = True
+				# 	proc.pop.send_signal(signal.SIGTERM)
+				# print(self.prompt)
 
 	def handleSighup(self, signum, frame):
 		""""""

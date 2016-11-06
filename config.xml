@@ -82,7 +82,7 @@
 		<workingdir></workingdir>
 		<umask>022</umask>
 		<progname>top</progname>
-		<stopsig>SIGTERM</stopsig>
+		<stopsig>SIGUSR1</stopsig>
 		<autolaunch>True</autolaunch>
 		<stoptime>5</stoptime>
 		<command>/usr/bin/top</command>
@@ -91,7 +91,7 @@
 		<stderrmax>100000</stderrmax>
 		<procnum>3</procnum>
 		<starttime>5</starttime>
-		<restart>always</restart>
+		<restart>never</restart>
 		<exitcodes>
 			<code>0</code>
 		</exitcodes>
