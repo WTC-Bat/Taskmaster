@@ -147,7 +147,7 @@
 		<umask>022</umask>
 		<progname>cat</progname>
 		<stopsig>SIGTERM</stopsig>
-		<autolaunch>True</autolaunch>
+		<autolaunch>False</autolaunch>
 		<stoptime>5</stoptime>
 		<command>cat "TASKMASTER"</command>
 		<stderr>cat.stderr</stderr>

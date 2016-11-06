@@ -160,7 +160,8 @@ class Taskmaster(cmd.Cmd):
 						stopstring += " " + prog.progname
 
 		# stop runnuing processes
-		print("Reloading config file...")
+		# print("Reloading config file...")
+		log("Reloading config file...", "./tmlog.txt", True)
 		if (cnt > 0):
 			self.default(stopstring)
 			self.waitForPrograms()
@@ -403,8 +404,8 @@ class Taskmaster(cmd.Cmd):
 	def handleSighup(self, signum, frame):
 		""""""
 		if (signum == signal.SIGHUP):
-			log("Reloading config file", "./tmlog.txt", False)
-			self.reloadConfig()
+			log("Caught SIGHUP", "./tmlog.txt", False)
+			self.default("reload")
 
 	def handleSigint(self, signum, frame):
 		""""""
