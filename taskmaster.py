@@ -30,9 +30,10 @@ def autolaunchPrograms(taskmaster):
 
 def clearLog():
 	""""""
-	if (os.path.getsize("./tmlog.txt") > 0):
-		log = open("./tmlog.txt", "w")
-		log.close()
+	if (os.path.exists("./tmlog.txt")):
+		if (os.path.getsize("./tmlog.txt") > 0):
+			log = open("./tmlog.txt", "w")
+			log.close()
 
 
 def main():

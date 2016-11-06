@@ -83,6 +83,10 @@ class Taskmaster(cmd.Cmd):
 		else:
 			log("Unknown command: " + line, "./tmlog.txt", True)
 
+	def cmdloop(self):
+		""""""
+		self.registerProgramSignals()
+
 	def activePrograms(self):
 		"""Return the amount of programs with active processes"""
 		cnt = 0
@@ -399,6 +403,24 @@ class Taskmaster(cmd.Cmd):
 					if ((proc.starting == True) or (proc.stopping == True)):
 						return (True)
 		return (False)
+
+	def registerProgramSignals(self):
+		""""""
+		for prog in self.programs:
+			signum = tmfuncs.getSignalValue(prog.stopsig)
+			if not (signum == -42):
+				signal.signal(signum, self.handleProgramSignals)
+
+	def handleProgramSignals(self, signum, frame):
+		""""""
+		for prog in self.programs:
+			if (tmfuncs.getSignalValue(prog.sigstop) == signum):
+				log(prog.progname + " recieved signal " + str(signum),
+					"./tmlog.txt", True)
+				for proc in prog.processes:
+					proc.stop = True
+					proc.stopping = True
+					proc.pop.send_signal(signal.SIGTERM)
 
 	def handleSighup(self, signum, frame):
 		""""""
