@@ -365,8 +365,6 @@ class Taskmaster(cmd.Cmd):
 							if (proc.active == True and proc.pop.returncode == None):
 								proc.stop = True
 								proc.stopping = True
-								# signum = tmfuncs.getSignalValue(prog.stopsig)
-								# proc.pop.send_signal(signum)
 								proc.pop.send_signal(signal.SIGTERM)
 								procs += 1
 			else:
@@ -384,9 +382,6 @@ class Taskmaster(cmd.Cmd):
 									if (proc.active == True and proc.pop.returncode == None):
 										proc.stop = True
 										proc.stopping = True
-										# signum = tmfuncs.getSignalValue(
-										# 			prog.stopsig)
-										# proc.pop.send_signal(signum)
 										proc.pop.send_signal(signal.SIGTERM)
 										procs += 1
 					if (found == False):
@@ -425,11 +420,6 @@ class Taskmaster(cmd.Cmd):
 				log("Programs '" + prog.progname + "' recieved signal "
 					+ str(signum), "./tmlog.txt", True)
 				self.default("stop " + prog.progname)
-				# for proc in prog.processes:
-				# 	proc.stop = True
-				# 	proc.stopping = True
-				# 	proc.pop.send_signal(signal.SIGTERM)
-				# print(self.prompt)
 
 	def handleSighup(self, signum, frame):
 		""""""

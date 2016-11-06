@@ -114,13 +114,13 @@
 		<workingdir></workingdir>
 		<umask>022</umask>
 		<progname>who</progname>
-		<stopsig>SIGTERM</stopsig>
+		<stopsig>SIGUSR1</stopsig>
 		<autolaunch>False</autolaunch>
 		<stoptime>5</stoptime>
 		<command>/usr/bin/who</command>
 		<stderr>who.stderr</stderr>
 		<rederr>False</rederr>
-		<stderrmax>1000</stderrmax>
+		<stderrmax>10000</stderrmax>
 		<procnum>1</procnum>
 		<starttime>5</starttime>
 		<restart>always</restart>
