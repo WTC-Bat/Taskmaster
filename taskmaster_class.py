@@ -1,3 +1,4 @@
+import os
 import cmd
 import signal
 import tmdata
@@ -20,8 +21,9 @@ class Taskmaster(cmd.Cmd):
 
 	def do_help(self, args):
 		"""Display Taskmaster help and commands"""
+		print("clear:\n\tclear the terminal\n")
 		print("-h:")
-		print("help:\n\tshow these commands")
+		print("help:\n\tshow these commands\n")
 		print("programs:\n\tprint a list of loaded programs\n")
 		print("reload:\n\treload config file new/changed "
 				+ "programs\n")
@@ -68,7 +70,6 @@ class Taskmaster(cmd.Cmd):
 			self.restartPrograms(line.split())
 		elif (line == "reload"):
 			self.reloadConfig()
-#------------------------------------------------------------------------------#
 		elif (line == "-h"):
 			self.do_help(None)
 		elif (line.startswith("programs")):
@@ -77,6 +78,8 @@ class Taskmaster(cmd.Cmd):
 				return
 			for prog in self.programs:
 				print(prog)
+		elif (line == "clear"):
+			os.system("clear")
 		else:
 			log("Unknown command: " + line, "./tmlog.txt", True)
 
